@@ -153,7 +153,7 @@ pipeline {
                 expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'origin/master' }
             }
             steps {
-                sh 'docker compose build'
+                sh 'docker-compose build'
             }
         }
 
@@ -179,10 +179,10 @@ pipeline {
             }
             steps {
                 sh '''
-                    docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
-                    docker compose -f docker-compose.yml -f docker-compose.dev.yml exec -T app php artisan migrate --force
-                    docker compose -f docker-compose.yml -f docker-compose.dev.yml exec -T app php artisan config:cache
-                    docker compose -f docker-compose.yml -f docker-compose.dev.yml exec -T app php artisan route:cache
+                    docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
+                    docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -T app php artisan migrate --force
+                    docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -T app php artisan config:cache
+                    docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -T app php artisan route:cache
                     echo "Deploy completed: $(date)"
                 '''
             }
