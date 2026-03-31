@@ -18,7 +18,7 @@ class Service extends Model
         parent::boot();
 
         static::deleting(function ($service) {
-            if ($service->servicetocustomer()->count() > 0) {
+            if ($service->servicetocustomers()->count() > 0) {
                 throw new \Exception('Cannot delete service because it has associated customers.');
             }
         });
