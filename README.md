@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/rafiimafif/automateCRM">
-    <img src="/public/img/simplecrmlogo.jpg" alt="Logo" width="80" height="80">
+    <img src="/public/img/automatecrm.png" alt="automateCRM Logo" width="80" height="80">
   </a>
 
 <h3 align="center">automateCRM</h3>

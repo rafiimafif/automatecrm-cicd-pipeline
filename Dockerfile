@@ -52,7 +52,11 @@ RUN apk add --no-cache \
     && rm -rf /var/cache/apk/*
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del .build-deps \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
     pdo_mysql \
     mbstring \
@@ -79,9 +83,7 @@ RUN { \
     echo '[global]'; \
     echo 'daemonize = no'; \
     echo '[www]'; \
-    echo 'listen = /var/run/php-fpm.sock'; \
-    echo 'listen.owner = nginx'; \
-    echo 'listen.group = nginx'; \
+    echo 'listen = 127.0.0.1:9000'; \
     echo 'pm = dynamic'; \
     echo 'pm.max_children = 20'; \
     echo 'pm.start_servers = 4'; \
@@ -109,7 +111,8 @@ COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Set permissions
-RUN chown -R www-data:www-data storage bootstrap/cache \
+RUN mkdir -p /var/log/supervisor \
+    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 # Expose port 80

@@ -3,7 +3,7 @@
 # Services: App, MySQL, Redis, Nginx, Mailhog
 # ==============================================
 
-version: "3.8"
+name: automatecrm
 
 services:
   # ---- Laravel Application ----
