@@ -97,6 +97,11 @@ services:
     depends_on:
       - app
     command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+    healthcheck:
+      test: ["CMD", "php", "-r", "echo 'ok';"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     environment:
       APP_ENV: production
       DB_HOST: db
@@ -121,6 +126,11 @@ services:
     depends_on:
       - app
     command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    healthcheck:
+      test: ["CMD", "php", "-r", "echo 'ok';"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     environment:
       APP_ENV: production
       DB_HOST: db
