@@ -24,7 +24,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'dashboard'])->midd
 Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /* ------ customers routes ------ */
-Route::get('/logout', [App\Http\Controllers\HomeController::class, 'logout']);
+Route::get('/logout', [App\Http\Controllers\HomeController::class, 'logout'])->name('logout.custom');
 
 Route::get('/customers', [App\Http\Controllers\CustomersController::class, 'index'])->middleware('auth');
 Route::get('/customer_edit/{id}', [App\Http\Controllers\CustomersController::class, 'edit'])->name('customer_edit')->middleware('auth');
