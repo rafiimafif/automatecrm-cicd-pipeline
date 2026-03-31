@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
-use App\Models\services;
 use App\Models\customers;
+use App\Models\services;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +73,4 @@ Route::get('servicetocustomer', function () {
 
     return $customers;
 });
-
-
-
 

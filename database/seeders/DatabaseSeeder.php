@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Domain',
         ]);
         Services::factory()->create([
-            'name'=>'Web Development',
+            'name' => 'Web Development',
         ]);
     }
 }
