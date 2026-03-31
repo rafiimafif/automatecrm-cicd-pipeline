@@ -104,8 +104,10 @@ pipeline {
                     mkdir -p tests/results
                     vendor/bin/phpunit \
                       --coverage-clover=coverage.xml \
+                      --coverage-html=coverage \
                       --log-junit=tests/results/junit.xml \
-                      -d pcov.enabled=1
+                      -d pcov.enabled=1 \
+                      -d pcov.directory=.
                 '''
             }
             post {

@@ -2,17 +2,32 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use App\Models\Customer;
+use App\Models\Service;
+use App\Models\User;
+use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function test_that_true_is_true()
+    public function test_customer_model_has_correct_fillable_attributes()
     {
+        $customer = new Customer();
+        $this->assertInstanceOf(Customer::class, $customer);
+    }
+
+    public function test_service_model_can_be_instantiated()
+    {
+        $service = new Service();
+        $this->assertInstanceOf(Service::class, $service);
+    }
+
+    public function test_user_model_can_be_instantiated()
+    {
+        $user = new User();
+        $this->assertInstanceOf(User::class, $user);
+    }
+}
+
         $this->assertTrue(true);
     }
 }
