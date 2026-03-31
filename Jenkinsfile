@@ -91,17 +91,20 @@ pipeline {
             agent {
                 docker {
                     image 'php:8.2-cli'
-                    args '--link mysql:mysql'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
+                    pecl install pcov && docker-php-ext-enable pcov
                     cp .env.example .env
                     php artisan key:generate
                     php artisan config:clear
-                    php artisan migrate --force
-                    vendor/bin/phpunit --coverage-clover=coverage.xml
+                    mkdir -p tests/results
+                    vendor/bin/phpunit \
+                      --coverage-clover=coverage.xml \
+                      --log-junit=tests/results/junit.xml \
+                      -d pcov.enabled=1
                 '''
             }
             post {
@@ -119,14 +122,19 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('SonarCloud Analysis') {
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli:11'
+                    reuseNode true
+                    args '--entrypoint="" -e SONAR_USER_HOME=/tmp/.sonar'
+                }
+            }
             steps {
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('SonarCloud') {
                     sh '''
                         sonar-scanner \
-                          -Dsonar.projectKey=rafiimafif_automateCRM \
-                          -Dsonar.sources=app \
-                          -Dsonar.tests=tests \
+                          -Dsonar.organization=rafiimafif \
                           -Dsonar.php.coverage.reportPaths=coverage.xml \
                           -Dsonar.token=${SONAR_TOKEN}
                     '''

@@ -1,0 +1,43 @@
+# ==============================================
+# automateCRM — Jenkins CI (Docker)
+# Jenkins with Docker socket access for pipeline Docker agents
+#
+# Usage:
+#   docker compose -f docker-compose.jenkins.yml up -d
+#   Access: http://localhost:8090
+#   Initial password: docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+#
+# Required Jenkins plugins (install after first login):
+#   - Docker Pipeline
+#   - SonarQube Scanner
+# Required Jenkins credentials:
+#   - sonarqube-token (Secret text)  → SonarCloud token
+#   - docker-registry-creds (Username/password) → GHCR credentials
+#   - deploy-ssh-key (SSH key) → Staging server SSH key
+# Required Jenkins global config:
+#   - SonarQube server named 'SonarCloud' → https://sonarcloud.io
+# ==============================================
+
+name: automatecrm-jenkins
+
+services:
+  jenkins:
+    build:
+      context: docker/jenkins
+      dockerfile: Dockerfile
+    container_name: jenkins
+    restart: unless-stopped
+    user: root
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      JAVA_OPTS: >-
+        -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
+        -Djenkins.install.runSetupWizard=false
+
+volumes:
+  jenkins-home:
