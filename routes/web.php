@@ -21,8 +21,6 @@ Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'dashboard'])->middleware('auth');
 
-Auth::routes();
-
 Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /* ------ customers routes ------ */
