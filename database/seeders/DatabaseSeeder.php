@@ -22,20 +22,20 @@ class DatabaseSeeder extends Seeder
         // ]);
         Customers::factory(10)->create();
         Users::factory()->create([
-            'name'=>'admin',
-            'email'=>'admin@admin.com',
-            'password'=>'password',
+            'name' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => 'password',
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
         ]);
         Services::factory()->create([
-            'name'=>'Website Hosting',
+            'name' => 'Website Hosting',
         ]);
         Services::factory()->create([
-            'name'=>'Email Hosting',
+            'name' => 'Email Hosting',
         ]);
         Services::factory()->create([
-            'name'=>'Domain',
+            'name' => 'Domain',
         ]);
         Services::factory()->create([
             'name'=>'Web Development',

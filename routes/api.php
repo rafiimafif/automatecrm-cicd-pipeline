@@ -34,44 +34,44 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('customers', function() {
+Route::get('customers', function () {
     return Customers::all();
 });
 
-Route::get('customers/{id}', function($id) {
+Route::get('customers/{id}', function ($id) {
     return Customers::find($id);
 });
 
-Route::get('customers-service/{id}', function($id) {
+Route::get('customers-service/{id}', function ($id) {
     $customers = DB::table('servicetocustomer')
-    ->join('services', 'services.id', '=', 'servicetocustomer.service_id')
-    ->join('customers', 'customers.id', '=', 'servicetocustomer.customer_id')
-    ->where('customers.id','=',$id)
-    ->select('servicetocustomer.*', 'services.name as service_name',  'customers.id as customer_id' ,'customers.fname as customer_fname', 'customers.lname as customer_lname')
-    ->get();
+        ->join('services', 'services.id', '=', 'servicetocustomer.service_id')
+        ->join('customers', 'customers.id', '=', 'servicetocustomer.customer_id')
+        ->where('customers.id', '=', $id)
+        ->select('servicetocustomer.*', 'services.name as service_name', 'customers.id as customer_id', 'customers.fname as customer_fname', 'customers.lname as customer_lname')
+        ->get();
 
     return $customers;
 });
 
-Route::get('services', function() {
+Route::get('services', function () {
     return Services::all();
 });
 
-Route::get('services/{id}', function($id) {
+Route::get('services/{id}', function ($id) {
     return Services::find($id);
 });
 
-Route::get('servicetocustomer', function() {
+Route::get('servicetocustomer', function () {
     $services = Services::all();
-        //$customers = Customers::all();
+    //$customers = Customers::all();
 
-        $customers = DB::table('servicetocustomer')
+    $customers = DB::table('servicetocustomer')
         ->join('services', 'services.id', '=', 'servicetocustomer.service_id')
         ->join('customers', 'customers.id', '=', 'servicetocustomer.customer_id')
-        ->select('servicetocustomer.*', 'services.name as service_name',  'customers.id as customer_id' ,'customers.fname as customer_fname', 'customers.lname as customer_lname')
+        ->select('servicetocustomer.*', 'services.name as service_name', 'customers.id as customer_id', 'customers.fname as customer_fname', 'customers.lname as customer_lname')
         ->get();
 
-        return $customers;
+    return $customers;
 });
 
 
