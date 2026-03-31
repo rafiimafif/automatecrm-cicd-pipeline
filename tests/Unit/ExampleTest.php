@@ -15,6 +15,7 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     use RefreshDatabase;
+
     public function test_customer_model_can_be_instantiated()
     {
         $customer = new Customer();
