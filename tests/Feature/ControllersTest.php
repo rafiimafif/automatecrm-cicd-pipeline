@@ -2,9 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Customer;
-use App\Models\Service;
-use App\Models\ServicetoCustomer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
