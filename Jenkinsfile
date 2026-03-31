@@ -9,7 +9,7 @@ pipeline {
     environment {
         APP_NAME        = 'automatecrm'
         REGISTRY        = 'ghcr.io'
-        IMAGE_NAME      = "${REGISTRY}/rafiimafif/automateCRM"
+        IMAGE_NAME      = "${REGISTRY}/rafiimafif/automatecrm"
         DOCKER_CREDS    = credentials('docker-registry-creds')
         SONAR_TOKEN     = credentials('sonarqube-token')
         DEPLOY_SSH_KEY  = credentials('deploy-ssh-key')
