@@ -20,7 +20,7 @@ class ServicetoCustomerTest extends TestCase
         $response = $this->actingAs($user)->post('/customer_add', [
             'fname' => 'John',
             'lname' => 'Doe',
-            'email' => uniqid('john', true) . '@example.com',
+            'email' => uniqid('john', true).'@example.com',
             'phone' => '1234567890',
             'address' => '123 Main St',
             'company' => 'TestCo',
