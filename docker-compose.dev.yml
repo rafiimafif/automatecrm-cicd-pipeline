@@ -20,7 +20,7 @@ services:
   # ---- phpMyAdmin ----
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: automatecrm-phpmyadmin
+    container_name: phpmyadmin
     restart: unless-stopped
     depends_on:
       - db
@@ -36,7 +36,7 @@ services:
   # ---- Redis Commander (Redis GUI) ----
   redis-commander:
     image: rediscommander/redis-commander:latest
-    container_name: automatecrm-redis-commander
+    container_name: redis-commander
     restart: unless-stopped
     depends_on:
       - redis
