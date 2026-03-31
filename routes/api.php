@@ -25,8 +25,10 @@ Route::get('/health', function () {
         $status['database'] = 'connected';
     } catch (\Exception $e) {
         $status['database'] = 'disconnected';
+
         return response()->json($status, 503);
     }
+
     return response()->json($status, 200);
 });
 
@@ -73,4 +75,3 @@ Route::get('servicetocustomer', function () {
 
     return $customers;
 });
-
