@@ -1,0 +1,160 @@
+# ==============================================
+# automateCRM — Docker Compose (Full Stack)
+# Services: App, MySQL, Redis, Nginx, Mailhog
+# ==============================================
+
+version: "3.8"
+
+services:
+  # ---- Laravel Application ----
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: automatecrm-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      APP_NAME: automateCRM
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: http://localhost
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: automatecrm
+      DB_USERNAME: automatecrm
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+    volumes:
+      - app-storage:/var/www/html/storage
+    networks:
+      - automatecrm-network
+    ports:
+      - "${APP_PORT:-8080}:80"
+
+  # ---- MySQL Database ----
+  db:
+    image: mysql:8.0
+    container_name: automatecrm-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+      MYSQL_DATABASE: automatecrm
+      MYSQL_USER: automatecrm
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    networks:
+      - automatecrm-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---- Redis Cache ----
+  redis:
+    image: redis:7-alpine
+    container_name: automatecrm-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - automatecrm-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ---- Queue Worker ----
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: automatecrm-queue
+    restart: unless-stopped
+    depends_on:
+      - app
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+    environment:
+      APP_ENV: production
+      DB_HOST: db
+      DB_DATABASE: automatecrm
+      DB_USERNAME: automatecrm
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      REDIS_HOST: redis
+      QUEUE_CONNECTION: redis
+    volumes:
+      - app-storage:/var/www/html/storage
+    networks:
+      - automatecrm-network
+
+  # ---- Task Scheduler ----
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: automatecrm-scheduler
+    restart: unless-stopped
+    depends_on:
+      - app
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    environment:
+      APP_ENV: production
+      DB_HOST: db
+      DB_DATABASE: automatecrm
+      DB_USERNAME: automatecrm
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      REDIS_HOST: redis
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+    volumes:
+      - app-storage:/var/www/html/storage
+    networks:
+      - automatecrm-network
+
+  # ---- Mailhog (Dev email catching) ----
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: automatecrm-mailhog
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_PORT:-8025}:8025"
+      - "1025:1025"
+    networks:
+      - automatecrm-network
+
+volumes:
+  db-data:
+    driver: local
+  redis-data:
+    driver: local
+  app-storage:
+    driver: local
+
+networks:
+  automatecrm-network:
+    driver: bridge
+    name: automatecrm-network

@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'simpleCRM'),
+    'name' => env('APP_NAME', 'automateCRM'),
 
     /*
     |--------------------------------------------------------------------------

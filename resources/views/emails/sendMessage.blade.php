@@ -1,2 +1,2 @@
 
-Please contant us for paying methods
+Please contact us for payment methods

@@ -1,7 +1,7 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "description": "SimpleCRM For Hosting Providers",
+    "description": "automateCRM - Customer Relationship Management System by Rafii Muhammad Afif",
     "keywords": [
         "framework",
         "laravel"

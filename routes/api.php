@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Models\services;
 use App\Models\customers;
 
@@ -15,6 +16,19 @@ use App\Models\customers;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// Health check endpoint for Docker & load balancer probes
+Route::get('/health', function () {
+    $status = ['status' => 'ok', 'timestamp' => now()->toIso8601String()];
+    try {
+        DB::connection()->getPdo();
+        $status['database'] = 'connected';
+    } catch (\Exception $e) {
+        $status['database'] = 'disconnected';
+        return response()->json($status, 503);
+    }
+    return response()->json($status, 200);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

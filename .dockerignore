@@ -1,0 +1,56 @@
+# Dependencies
+/vendor
+/node_modules
+
+# Environment
+.env
+.env.backup
+.env.*.local
+
+# IDE & OS
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker (prevent recursive copy)
+docker-compose*.yml
+Dockerfile*
+
+# CI/CD
+.github
+Jenkinsfile
+Makefile
+terraform/
+
+# Build artifacts
+/public/hot
+/public/build
+
+# Storage (will be mounted as volume)
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+
+# Testing
+/tests
+phpunit.xml
+.phpunit.result.cache
+/coverage
+
+# Documentation
+/docs
+*.md
+LICENSE*
+
+# SonarQube
+sonar-project.properties
+.scannerwork

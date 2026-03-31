@@ -1,3 +1,408 @@
+/* ================================================
+   automateCRM — Elegant Purple Theme
+   ================================================ */
+
+/* --- CSS Custom Properties --- */
+:root {
+    --purple-50: #faf5ff;
+    --purple-100: #f3e8ff;
+    --purple-200: #e9d5ff;
+    --purple-300: #d8b4fe;
+    --purple-400: #c084fc;
+    --purple-500: #a855f7;
+    --purple-600: #9333ea;
+    --purple-700: #7c3aed;
+    --purple-800: #6b21a8;
+    --purple-900: #581c87;
+    --primary: #7c3aed;
+    --primary-dark: #6b21a8;
+    --primary-light: #a855f7;
+    --accent: #c084fc;
+    --surface: #faf5ff;
+}
+
+/* --- Typography --- */
+body {
+    font-family: 'Inter', 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    color: #4a4a68;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Inter', 'Nunito', sans-serif !important;
+    font-weight: 700;
+    color: #2d2b55;
+}
+
+/* --- Primary Color Overrides --- */
+.bg-primary,
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35) !important;
+}
+
+.btn-primary:active {
+    background-color: #5b21b6 !important;
+    border-color: #5b21b6 !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* --- Gradient Overrides --- */
+.bg-gradient-primary {
+    background-color: var(--primary) !important;
+    background-image: linear-gradient(180deg, #8b5cf6 10%, #5b21b6 100%) !important;
+}
+
+.bg-gradient-success {
+    background-image: linear-gradient(180deg, #1cc88a 10%, #13855c 100%) !important;
+}
+
+.bg-gradient-info {
+    background-image: linear-gradient(180deg, #36b9cc 10%, #258391 100%) !important;
+}
+
+.bg-gradient-warning {
+    background-image: linear-gradient(180deg, #f6c23e 10%, #dda20a 100%) !important;
+}
+
+.bg-gradient-danger {
+    background-image: linear-gradient(180deg, #e74a3b 10%, #be2617 100%) !important;
+}
+
+/* --- Sidebar — Elegant Purple --- */
+.sidebar {
+    background-image: linear-gradient(180deg, #7c3aed 10%, #4c1d95 100%) !important;
+}
+
+.sidebar .sidebar-brand {
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.sidebar .nav-item .nav-link {
+    font-weight: 500;
+    padding: 0.85rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-item .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.35rem;
+}
+
+.sidebar .nav-item.active .nav-link {
+    font-weight: 600;
+}
+
+.sidebar-card {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.75rem;
+    backdrop-filter: blur(10px);
+}
+
+.sidebar hr.sidebar-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* --- Topbar --- */
+.topbar {
+    background-color: #fff !important;
+    box-shadow: 0 2px 20px rgba(124, 58, 237, 0.08) !important;
+}
+
+.topbar .dropdown-list .dropdown-header {
+    background-color: var(--primary) !important;
+    background-image: linear-gradient(135deg, #8b5cf6, #6d28d9) !important;
+    border: none !important;
+}
+
+/* --- Cards — Refined --- */
+.card {
+    border: none !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 2px 15px rgba(124, 58, 237, 0.07) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 5px 25px rgba(124, 58, 237, 0.12) !important;
+}
+
+.card .card-header {
+    background-color: #faf5ff !important;
+    border-bottom: 1px solid #f3e8ff !important;
+    font-weight: 600;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+/* --- Border-left accent colors --- */
+.border-left-primary {
+    border-left: 0.25rem solid var(--primary) !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.border-left-danger {
+    border-left: 0.25rem solid #e74a3b !important;
+}
+
+/* --- Buttons — Elegant Styling --- */
+.btn {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-success {
+    background-color: #1cc88a;
+    border-color: #1cc88a;
+}
+
+.btn-success:hover {
+    background-color: #17a673;
+    border-color: #17a673;
+    box-shadow: 0 4px 12px rgba(28, 200, 138, 0.3);
+}
+
+.btn-info {
+    background-color: #36b9cc;
+    border-color: #36b9cc;
+}
+
+.btn-info:hover {
+    box-shadow: 0 4px 12px rgba(54, 185, 204, 0.3);
+}
+
+.btn-danger {
+    background-color: #e74a3b;
+    border-color: #e74a3b;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 4px 12px rgba(231, 74, 59, 0.3);
+}
+
+.btn-warning {
+    background-color: #f6c23e;
+    border-color: #f6c23e;
+}
+
+.btn-warning:hover {
+    box-shadow: 0 4px 12px rgba(246, 194, 62, 0.3);
+}
+
+/* --- Content Wrapper --- */
+#content-wrapper {
+    background-color: #f8f5ff !important;
+}
+
+/* --- Tables --- */
+.table thead th {
+    background-color: #faf5ff;
+    color: #2d2b55;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e9d5ff;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #faf5ff;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #fff !important;
+    border-radius: 0.35rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: var(--purple-100) !important;
+    border-color: var(--purple-200) !important;
+    color: var(--primary) !important;
+}
+
+/* --- Dropdown Menus --- */
+.dropdown-menu {
+    border: none !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 5px 25px rgba(124, 58, 237, 0.15) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--purple-50) !important;
+    color: var(--primary) !important;
+}
+
+/* --- Form Controls --- */
+.form-control:focus {
+    border-color: var(--purple-300) !important;
+    box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.2) !important;
+}
+
+/* --- Badges --- */
+.badge-primary {
+    background-color: var(--primary) !important;
+}
+
+.badge-counter {
+    background-color: #e74a3b !important;
+}
+
+/* --- Search Bar --- */
+.topbar .navbar-search .form-control {
+    border-radius: 0.5rem;
+    background-color: #f8f5ff !important;
+    border: 1px solid #e9d5ff;
+}
+
+.topbar .navbar-search .btn {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* --- Scroll to Top --- */
+.scroll-to-top {
+    background: rgba(124, 58, 237, 0.5);
+}
+
+.scroll-to-top:hover {
+    background: var(--primary);
+}
+
+/* --- Footer --- */
+.sticky-footer {
+    border-top: 1px solid #f3e8ff;
+}
+
+.sticky-footer span {
+    color: #858796;
+    font-size: 0.85rem;
+}
+
+/* --- Login Page --- */
+.bg-login-image {
+    background: linear-gradient(135deg, #8b5cf6 0%, #4c1d95 100%) !important;
+}
+
+.bg-login-image img {
+    mix-blend-mode: luminosity;
+    opacity: 0.3;
+}
+
+.bg-register-image {
+    background: linear-gradient(135deg, #a855f7 0%, #6d28d9 100%) !important;
+}
+
+/* --- Page Heading --- */
+.text-gray-800 {
+    color: #2d2b55 !important;
+}
+
+/* --- Progress Bar --- */
+.progress-bar {
+    background-color: var(--primary) !important;
+}
+
+/* --- Chart Area Gradient (for JS usage) --- */
+.chart-area {
+    border-radius: 0.5rem;
+}
+
+/* --- Elegant Shadows & Polish --- */
+.shadow {
+    box-shadow: 0 2px 15px rgba(124, 58, 237, 0.08) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 1px 6px rgba(124, 58, 237, 0.06) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 8px 40px rgba(124, 58, 237, 0.12) !important;
+}
+
+/* --- Pagination --- */
+.page-link {
+    color: var(--primary);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* --- Alert --- */
+.alert-primary {
+    background-color: #f3e8ff;
+    border-color: #e9d5ff;
+    color: #6b21a8;
+}
+
+/* --- Nav Tabs & Pills --- */
+.nav-tabs .nav-link.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--primary);
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f8f5ff;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d8b4fe;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c084fc;
+}
+
 /* --------  single customer --------- */
 
 #single_customer_form button {

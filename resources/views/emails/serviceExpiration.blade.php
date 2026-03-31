@@ -9,6 +9,6 @@
     <p>Your service <strong>{{ $data['service_name'] }}</strong> is expiring soon on <strong>{{ $data['expiration'] }}</strong>.</p>
     <p>Please contact us if you have any questions or if you would like to renew your service.</p>
     <p>Thank you,</p>
-    <p>Your Company Name</p>
+    <p>automateCRM Team</p>
 </body>
 </html>

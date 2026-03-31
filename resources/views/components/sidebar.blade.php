@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">simpleCRM</div>
+        <div class="sidebar-brand-text mx-3">automateCRM</div>
     </a>
 
     <!-- Divider -->
@@ -53,9 +53,8 @@
     <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
         <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-        <p class="text-center mb-2"><strong>simpleCRM</strong> is simple CRM system for web development agencies. Free
-            to use. Keep in touch for more updates at github</p>
-        <a class="btn btn-success btn-sm" href="https://github.com/NickArm/simpleCRM">Fork me!</a>
+        <p class="text-center mb-2"><strong>automateCRM</strong> is a CRM system for managing customers, services, and payments. Built by Rafii Muhammad Afif.</p>
+        <a class="btn btn-success btn-sm" href="https://github.com/rafiimafif/automateCRM">View on GitHub</a>
     </div>
 
 </ul>
