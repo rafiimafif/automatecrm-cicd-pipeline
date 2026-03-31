@@ -37,7 +37,7 @@ class ServicetoCustomerTest extends TestCase
         $user = User::factory()->create();
         $response = $this->actingAs($user)->post('/service_add', [
             'name' => uniqid('Service', true),
-            'descriptiom' => 'A test service',
+            'description' => 'A test service',
         ]);
 
         $response->assertRedirect('/services');
