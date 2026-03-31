@@ -153,7 +153,10 @@ pipeline {
                 expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'origin/master' }
             }
             steps {
-                sh 'docker compose build'
+                sh '''
+                    docker compose build
+                    docker image prune -f
+                '''
             }
         }
 
