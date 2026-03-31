@@ -155,7 +155,7 @@ pipeline {
 
         stage('Build Docker Image') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 sh """
@@ -166,7 +166,7 @@ pipeline {
 
         stage('Security Scan') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 sh """
@@ -182,7 +182,7 @@ pipeline {
 
         stage('Push Image') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 sh """
@@ -195,7 +195,7 @@ pipeline {
 
         stage('Deploy to Staging') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 sshagent(credentials: ['deploy-ssh-key']) {
