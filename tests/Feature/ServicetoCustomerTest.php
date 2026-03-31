@@ -20,7 +20,7 @@ class ServicetoCustomerTest extends TestCase
         $response = $this->actingAs($user)->post('/customer_add', [
             'fname' => 'John',
             'lname' => 'Doe',
-            'email' => 'john.doe.' . time() . '@example.com',
+            'email' => uniqid('john', true) . '@example.com',
             'phone' => '1234567890',
             'address' => '123 Main St',
             'company' => 'TestCo',
@@ -33,7 +33,7 @@ class ServicetoCustomerTest extends TestCase
     {
         $user = User::factory()->make();
         $response = $this->actingAs($user)->post('/service_add', [
-            'name' => 'Test Service ' . time(),
+            'name' => uniqid('Service', true),
             'description' => 'A test service',
         ]);
 
