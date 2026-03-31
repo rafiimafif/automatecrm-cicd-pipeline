@@ -5,7 +5,7 @@
 <br />
 
 <a href="https://github.com/rafiimafif/automatecrm-cicd-pipeline">
-  <img src="/public/img/automatecrm.png" alt="automateCRM Logo" width="80" height="80">
+  <img src="/public/img/automateCRM.png" alt="automateCRM Logo" width="80" height="80">
 </a>
 
 <h3>automateCRM</h3>
