@@ -18,7 +18,7 @@
 #   - SonarQube server named 'SonarCloud' → https://sonarcloud.io
 # ==============================================
 
-name: automatecrm-jenkins
+name: jenkins
 
 services:
   jenkins:
