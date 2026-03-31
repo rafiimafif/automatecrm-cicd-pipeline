@@ -67,7 +67,7 @@ class ExampleTest extends TestCase
     public function test_authenticated_user_can_view_activity_log()
     {
         $user = User::factory()->make();
-        $response = $this->actingAs($user)->get('/activity_log');
+        $response = $this->actingAs($user)->get('/activity-log');
 
         $response->assertStatus(200);
     }

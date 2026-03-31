@@ -9,10 +9,12 @@ use App\Models\Service;
 use App\Models\ServicetoCustomer;
 use App\Models\User;
 use App\Services\RenewalService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_customer_model_can_be_instantiated()
     {
         $customer = new Customer();
