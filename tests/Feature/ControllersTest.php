@@ -41,7 +41,8 @@ class ControllersTest extends TestCase
 
     public function test_welcome_page_is_accessible()
     {
-        $response = $this->get('/welcome');
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->get('/welcome');
 
         $response->assertStatus(200);
     }
