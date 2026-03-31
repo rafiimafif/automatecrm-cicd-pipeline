@@ -2,19 +2,49 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Tests\TestCase;
 
 class ServicetoCustomerTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_example()
     {
         $response = $this->get('/api/health');
 
         $response->assertStatus(200);
+    }
+
+    public function test_authenticated_user_can_add_customer()
+    {
+        $user = User::factory()->make();
+        $response = $this->actingAs($user)->post('/customer_add', [
+            'fname' => 'John',
+            'lname' => 'Doe',
+            'email' => 'john.doe.' . time() . '@example.com',
+            'phone' => '1234567890',
+            'address' => '123 Main St',
+            'company' => 'TestCo',
+        ]);
+
+        $response->assertRedirect('/customers');
+    }
+
+    public function test_authenticated_user_can_add_service()
+    {
+        $user = User::factory()->make();
+        $response = $this->actingAs($user)->post('/service_add', [
+            'name' => 'Test Service ' . time(),
+            'description' => 'A test service',
+        ]);
+
+        $response->assertRedirect('/services');
+    }
+
+    public function test_logout_redirects_to_login()
+    {
+        $user = User::factory()->make();
+        $response = $this->actingAs($user)->get('/logout');
+
+        $response->assertRedirect('/login');
     }
 }
