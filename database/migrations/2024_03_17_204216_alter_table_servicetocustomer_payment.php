@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::table('servicetocustomer', function (Blueprint $table) {
             $table->dropColumn('paid_status');
+        });
+
+        Schema::table('servicetocustomer', function (Blueprint $table) {
             $table->unsignedBigInteger('payment_id')->nullable()->after('reminder');
             $table->foreign('payment_id')->references('id')->on('payments')->onDelete('set null');
         });
