@@ -223,7 +223,7 @@ pipeline {
             echo "Pipeline failed for ${APP_NAME} (${GIT_COMMIT_SHORT})"
         }
         always {
-            cleanWs()
+            deleteDir()
         }
     }
 }
