@@ -23,11 +23,12 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"><img src="/img/simplecrmlogo.jpg" />
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background: #4e73df url('/img/automateCRM.png') center/contain no-repeat;">
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
+                                        <img src="/img/automateCRM.png" alt="automateCRM" class="mb-3" style="width:80px;height:80px;object-fit:contain;">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome to automateCRM</h1>
                                     </div>
                                     <form method="POST" action="{{ route('login') }}">
