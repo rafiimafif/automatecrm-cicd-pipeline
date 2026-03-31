@@ -38,8 +38,9 @@ pipeline {
                 stage('Composer') {
                     agent {
                         docker {
-                            image 'composer:2'
+                            image 'composer:2.7'
                             reuseNode true
+                            args '--entrypoint=""'
                         }
                     }
                     steps {
