@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ServicetoCustomerTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_example()
     {
         $response = $this->get('/api/health');
@@ -16,7 +19,7 @@ class ServicetoCustomerTest extends TestCase
 
     public function test_authenticated_user_can_add_customer()
     {
-        $user = User::factory()->make();
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->post('/customer_add', [
             'fname' => 'John',
             'lname' => 'Doe',
@@ -31,7 +34,7 @@ class ServicetoCustomerTest extends TestCase
 
     public function test_authenticated_user_can_add_service()
     {
-        $user = User::factory()->make();
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->post('/service_add', [
             'name' => uniqid('Service', true),
             'description' => 'A test service',
@@ -42,7 +45,7 @@ class ServicetoCustomerTest extends TestCase
 
     public function test_logout_redirects_to_login()
     {
-        $user = User::factory()->make();
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/logout');
 
         $response->assertRedirect('/login');
