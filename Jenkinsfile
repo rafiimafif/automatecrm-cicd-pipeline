@@ -44,7 +44,7 @@ pipeline {
                         }
                     }
                     steps {
-                        sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                        sh 'composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-gd'
                     }
                 }
                 stage('NPM') {
