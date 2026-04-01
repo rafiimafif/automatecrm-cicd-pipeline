@@ -266,3 +266,4 @@ jobs:
             docker compose up -d --remove-orphans
             echo "Deployment completed at $(date)"
             echo "Note: migrations and config caching handled by entrypoint.sh"
+            docker system prune -f --filter "until=24h"

@@ -37,11 +37,21 @@ FROM php:8.2-fpm-alpine AS production
 LABEL maintainer="Rafii Muhammad Afif <rafii.afif@gmail.com>"
 LABEL description="automateCRM - Customer Relationship Management System"
 
-# Install system dependencies
+# Install runtime system dependencies (no -dev packages for smaller footprint)
 RUN apk add --no-cache \
     nginx \
     supervisor \
     curl \
+    libpng \
+    libjpeg-turbo \
+    freetype \
+    libzip \
+    oniguruma \
+    icu-libs
+
+# Install PHP extensions using transient build dependencies
+RUN apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
@@ -49,24 +59,21 @@ RUN apk add --no-cache \
     oniguruma-dev \
     icu-dev \
     linux-headers \
-    && rm -rf /var/cache/apk/*
-
-# Install PHP extensions
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && apk del .build-deps \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
-    pdo_mysql \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd \
-    zip \
-    intl \
-    opcache
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        zip \
+        intl \
+        opcache \
+    && apk del .build-deps \
+    && rm -rf /tmp/pear /var/cache/apk/*
 
 # Configure OPcache for production
 RUN { \

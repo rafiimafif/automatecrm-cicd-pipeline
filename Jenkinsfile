@@ -185,6 +185,7 @@ pipeline {
                     docker compose up -d --remove-orphans
                     echo "Deploy completed: $(date)"
                     echo "Note: migrations and config caching handled by entrypoint.sh"
+                    docker system prune -f --filter "until=24h"
                 '''
             }
         }
