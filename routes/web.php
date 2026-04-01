@@ -2,30 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-/*
-Route::get('/', function () {
-    return view('welcome');
-});*/
-
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'dashboard'])->middleware('auth');
-
 Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-/* ------ customers routes ------ */
 Route::get('/logout', [App\Http\Controllers\HomeController::class, 'logout'])->name('logout.custom');
 
+// ---> Transaction Dataset Routes <---
+Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'index'])->name('transactions.index')->middleware('auth');
+Route::get('/transactions/create', [App\Http\Controllers\TransactionController::class, 'create'])->name('transactions.create')->middleware('auth');
+Route::post('/transactions', [App\Http\Controllers\TransactionController::class, 'store'])->name('transactions.store')->middleware('auth');
+Route::get('/import-transactions', [App\Http\Controllers\TransactionController::class, 'import'])->name('transactions.import')->middleware('auth');
+Route::get('/export-transactions', [App\Http\Controllers\TransactionController::class, 'export'])->name('transactions.export')->middleware('auth');
+
+/* ------ customers routes ------ */
 Route::get('/customers', [App\Http\Controllers\CustomersController::class, 'index'])->middleware('auth');
 Route::get('/customer_edit/{id}', [App\Http\Controllers\CustomersController::class, 'edit'])->name('customer_edit')->middleware('auth');
 Route::post('/customer_add', [App\Http\Controllers\CustomersController::class, 'store'])->middleware('auth');
@@ -52,7 +42,6 @@ Route::delete('/servicetocustomer/{servicetocustomer}', 'App\Http\Controllers\Se
 Route::post('/servicetocustomer/update_reminder_status', 'App\Http\Controllers\ServicetoCustomerController@updateReminderStatus')->name('servicetocustomer.update_reminder_status');
 
 Route::post('/service/{id}/renew', [App\Http\Controllers\ServicetoCustomerController::class, 'renewService'])->name('service.renew');
-
 Route::get('/servicetocustomer/{servicetocustomer}/details', [App\Http\Controllers\ServicetoCustomerController::class, 'showServiceDetails'])->name('servicetocustomer.details');
 
 /* ------ tools routes ------ */

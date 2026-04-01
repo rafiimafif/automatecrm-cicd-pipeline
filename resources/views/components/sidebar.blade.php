@@ -1,11 +1,10 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
-        <div class="sidebar-brand-icon">
-            <img src="/img/automateCRM.png" alt="automateCRM" style="width:32px;height:32px;object-fit:contain;filter:brightness(0) invert(1);">
-        </div>
-        <div class="sidebar-brand-text mx-3">automateCRM</div>
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/"
+        style="height: 5rem; padding: 0 1rem; background: transparent;">
+        <img src="/img/logo.svg?v={{ time() }}" alt="automateCRM"
+            style="max-width: 100%; max-height: 80%; width: auto; object-fit: contain;">
     </a>
 
     <!-- Divider -->
@@ -18,17 +17,31 @@
             <span>Dashboard</span></a>
     </li>
 
-    <li class="nav-item active">
-        <a class="nav-link" href="/customers">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Show Customers</span></a>
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
+        Store Operations
+    </div>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('transactions.index') }}">
+            <i class="fas fa-fw fa-receipt"></i>
+            <span>All Transactions</span></a>
     </li>
 
-    <li class="nav-item active">
-        <a class="nav-link" href="/services">
-            <i class="fas fa-fw fa-file"></i>
-            <span>Show Services</span></a>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('transactions.import') }}">
+            <i class="fas fa-fw fa-file-excel"></i>
+            <span>Re-Import Dataset</span></a>
     </li>
+
+    <hr class="sidebar-divider">
+
+    <!-- Outdated Components below this are commented out, but retained for reference -->
+    <!--
+    <div class="sidebar-heading">
+        Interface
+    </div>
 
     <li class="nav-item active">
         <a class="nav-link" href="/payments">
@@ -37,10 +50,11 @@
     </li>
     <li class="nav-item active">
         <a class="nav-link" href="/tools">
-            <i class="fas fa-fw fa-credit-card"></i>
+            <i class="fas fa-fw fa-table"></i>
             <span>Tools</span></a>
     </li>
 
+    -->
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
@@ -53,7 +67,8 @@
     <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
         <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-        <p class="text-center mb-2"><strong>automateCRM</strong> is a CRM system for managing customers, services, and payments. Built by Rafii Muhammad Afif.</p>
+        <p class="text-center mb-2"><strong>automateCRM</strong> is a CRM system for managing customers, services, and
+            payments. Built by Rafii Muhammad Afif.</p>
         <a class="btn btn-success btn-sm" href="https://github.com/rafiimafif/automateCRM">View on GitHub</a>
     </div>
 

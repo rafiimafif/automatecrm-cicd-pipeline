@@ -4,6 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Customer;
+use App\Models\Service;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,31 +18,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // Create Admin User manually since UserFactory might not be complete
+        User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'admin',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
+            ]
+        );
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        Customers::factory(10)->create();
-        Users::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@admin.com',
-            'password' => 'password',
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-        ]);
-        Services::factory()->create([
-            'name' => 'Website Hosting',
-        ]);
-        Services::factory()->create([
-            'name' => 'Email Hosting',
-        ]);
-        Services::factory()->create([
-            'name' => 'Domain',
-        ]);
-        Services::factory()->create([
-            'name' => 'Web Development',
-        ]);
+        // Seed some basic services if they don't exist
+        $services = ['Website Hosting', 'Email Hosting', 'Domain', 'Web Development'];
+        foreach ($services as $serviceName) {
+            Service::firstOrCreate(['name' => $serviceName]);
+        }
+        
+        echo "[seeder] Seeded admin user and default services.\n";
     }
 }

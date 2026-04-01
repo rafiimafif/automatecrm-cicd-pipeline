@@ -77,7 +77,7 @@ done
 
 # ---- Step 5: Run migrations ----
 echo "[entrypoint] Running database migrations..."
-php artisan migrate --force || echo "[entrypoint] WARNING: Migrations failed, app may still work if tables exist"
+php artisan migrate --seed --force || echo "[entrypoint] WARNING: Migrations/Seeding failed, app may still work if tables exist"
 
 # ---- Step 6: Cache configuration ----
 echo "[entrypoint] Caching configuration..."

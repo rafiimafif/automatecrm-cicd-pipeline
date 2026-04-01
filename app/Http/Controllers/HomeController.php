@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\Service;
+use App\Models\Transaction;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -22,31 +21,22 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        $services = Service::all();
-
-        $customers = DB::table('servicetocustomer')
-            ->join('services', 'services.id', '=', 'servicetocustomer.service_id')
-            ->join('customers', 'customers.id', '=', 'servicetocustomer.customer_id')
-            ->select('servicetocustomer.*', 'services.name as service_name', 'customers.id as customer_id', 'customers.fname as customer_fname', 'customers.lname as customer_lname')
+        $transactions = Transaction::orderBy('sales_date_in', 'desc')->take(10)->get();
+        $paymentMethods = Transaction::select('payment_method', DB::raw('count(*) as total'))
+            ->groupBy('payment_method')
             ->get();
 
-        return view('welcome', compact('customers', 'services'));
-
+        return view('welcome', compact('transactions', 'paymentMethods'));
     }
 
     public static function finance()
     {
-        $earnings = DB::table('servicetocustomer')
-            ->sum('price');
+        $totalPayment = Transaction::sum('payment_amount');
+        $totalMdr = Transaction::sum('mdr');
+        $totalNett = Transaction::sum('nett_after_mdr');
+        $transactionCount = Transaction::count();
 
-        $debts = DB::table('servicetocustomer')
-            ->sum('price');
-
-        $customers = Customer::count();
-
-        $finance = [$earnings, $debts, $customers];
-
-        return $finance;
+        return [$totalPayment, $totalMdr, $totalNett, $transactionCount];
     }
 
     public function logout()

@@ -23,7 +23,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
-                    <img src="/img/automateCRM.png" alt="automateCRM" style="width:28px;height:28px;object-fit:contain;margin-right:8px;">
+                    <img src="/img/logo.svg" alt="automateCRM" style="width:120px;height:auto;object-fit:contain;margin-right:8px;filter:brightness(0.3) contrast(1.2);">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
