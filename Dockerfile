@@ -104,11 +104,19 @@ COPY --from=frontend --chown=www-data:www-data /app/public/build ./public/build
 # Copy vendor dependencies from Stage 2
 COPY --from=vendor --chown=www-data:www-data /app/vendor ./vendor
 
+# Clear bootstrap cache (may contain dev-only provider references from host)
+RUN rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php \
+    && php artisan package:discover --ansi || true
+
 # Copy Nginx config
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
 
 # Copy Supervisor config
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Set permissions
 RUN mkdir -p /var/log/supervisor \
@@ -118,9 +126,9 @@ RUN mkdir -p /var/log/supervisor \
 # Expose port 80
 EXPOSE 80
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+# Health check (increased start-period to allow entrypoint initialization)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD curl -f http://localhost/api/health || exit 1
 
-# Start services via Supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start via entrypoint (handles .env, key, migrations, cache, then supervisord)
+CMD ["/usr/local/bin/entrypoint.sh"]

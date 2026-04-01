@@ -22,6 +22,7 @@ services:
     environment:
       APP_NAME: automateCRM
       APP_ENV: production
+      APP_KEY: ${APP_KEY:-base64:RENJRFBpcGVsaW5lS2V5MjAyNkF1dG9tYXRlQ1JNMDk=}
       APP_DEBUG: "false"
       APP_URL: http://localhost
       DB_CONNECTION: mysql

@@ -183,10 +183,8 @@ pipeline {
             steps {
                 sh '''
                     docker compose up -d --remove-orphans
-                    docker compose exec -T app php artisan migrate --force
-                    docker compose exec -T app php artisan config:cache
-                    docker compose exec -T app php artisan route:cache
                     echo "Deploy completed: $(date)"
+                    echo "Note: migrations and config caching handled by entrypoint.sh"
                 '''
             }
         }
