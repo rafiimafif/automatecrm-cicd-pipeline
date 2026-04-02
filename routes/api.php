@@ -2,6 +2,7 @@
 
 use App\Models\customers;
 use App\Models\services;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,45 @@ Route::get('/health', function () {
     }
 
     return response()->json($status, 200);
+});
+
+// Public endpoint for Excel Power Query auto-refresh
+Route::get('/transactions', function () {
+    return Transaction::orderBy('id', 'asc')
+        ->get()
+        ->map(fn($t, $i) => [
+            'No' => $i + 1,
+            'Sales Number' => $t->sales_number,
+            'Bill Number' => $t->bill_number,
+            'Sales Date In' => $t->sales_date_in?->format('Y-m-d H:i:s'),
+            'Sales Date Out' => $t->sales_date_out?->format('Y-m-d H:i:s'),
+            'Brand' => $t->brand,
+            'Area' => $t->area,
+            'City' => $t->city,
+            'Branch' => $t->branch,
+            'Visit Purpose' => $t->visit_purpose,
+            'Reguler Member Code' => $t->reguler_member_code,
+            'Reguler Member Name' => $t->reguler_member_name,
+            'Loyalty Member Code' => $t->loyalty_member_code,
+            'Loyalty Member Name' => $t->loyalty_member_name,
+            'Loyalty Member Type' => $t->loyalty_member_type,
+            'Employee Code' => $t->employee_code,
+            'Employee Name' => $t->employee_name,
+            'External Employee Code' => $t->external_employee_code,
+            'External Employee Name' => $t->external_employee_name,
+            'Payment Method' => $t->payment_method,
+            'Parent Payment Method' => $t->parent_payment_method,
+            'Trace Number' => $t->trace_number,
+            'Approval Code' => $t->approval_code,
+            'EDC Terminal ID' => $t->edc_terminal_id,
+            'Bank Name' => $t->bank_name,
+            'Card Number' => $t->card_number,
+            'Additional Info' => $t->additional_info,
+            'Notes' => $t->notes,
+            'MDR' => $t->mdr,
+            'Payment Amount' => $t->payment_amount,
+            'Nett After MDR' => $t->nett_after_mdr,
+        ]);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
