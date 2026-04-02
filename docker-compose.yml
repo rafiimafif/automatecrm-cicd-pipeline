@@ -41,6 +41,7 @@ services:
       MAIL_PORT: ${MAIL_PORT:-2525}
     volumes:
       - app-storage:/var/www/html/storage
+      - ./public:/var/www/html/public
     networks:
       - automatecrm-network
     ports:
@@ -143,6 +144,36 @@ services:
       MAIL_PORT: ${MAIL_PORT:-2525}
     volumes:
       - app-storage:/var/www/html/storage
+    networks:
+      - automatecrm-network
+
+  # ---- phpMyAdmin (DB GUI) ----
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    ports:
+      - "8081:80"
+    networks:
+      - automatecrm-network
+
+  # ---- Redis Commander (Redis GUI) ----
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis-commander
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8082:8081"
     networks:
       - automatecrm-network
 

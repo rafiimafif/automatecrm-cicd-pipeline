@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Imports\TransactionsImport;
 use App\Exports\TransactionsExport;
+use App\Services\ExcelSyncService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -26,7 +27,7 @@ class TransactionController extends Controller
                   ->orWhere('payment_method', 'LIKE', "%{$search}%");
         }
         
-        $transactions = $query->orderBy('sales_date_in', 'desc')->paginate(15);
+        $transactions = $query->orderBy('id', 'asc')->paginate(15);
         return view('transactions.index', compact('transactions'));
     }
 
@@ -38,21 +39,48 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'sales_number'   => 'required|unique:transactions,sales_number',
-            'brand'          => 'required|string|max:255',
-            'sales_date_in'  => 'required|date',
-            'city'           => 'nullable|string|max:255',
-            'visit_purpose'  => 'nullable|string|max:255',
-            'payment_method' => 'required|string|max:255',
-            'bank_name'      => 'nullable|string|max:255',
-            'payment_amount' => 'required|numeric',
-            'mdr'            => 'nullable|numeric',
-            'nett_after_mdr' => 'nullable|numeric',
+            'sales_number'           => 'required|unique:transactions,sales_number',
+            'bill_number'            => 'nullable|string|max:255',
+            'sales_date_in'          => 'required|date',
+            'sales_date_out'         => 'nullable|date',
+            'brand'                  => 'required|string|max:255',
+            'area'                   => 'nullable|string|max:255',
+            'city'                   => 'nullable|string|max:255',
+            'branch'                 => 'nullable|string|max:255',
+            'visit_purpose'          => 'nullable|string|max:255',
+            'reguler_member_code'    => 'nullable|string|max:255',
+            'reguler_member_name'    => 'nullable|string|max:255',
+            'loyalty_member_code'    => 'nullable|string|max:255',
+            'loyalty_member_name'    => 'nullable|string|max:255',
+            'loyalty_member_type'    => 'nullable|string|max:255',
+            'employee_code'          => 'nullable|string|max:255',
+            'employee_name'          => 'nullable|string|max:255',
+            'external_employee_code' => 'nullable|string|max:255',
+            'external_employee_name' => 'nullable|string|max:255',
+            'payment_method'         => 'required|string|max:255',
+            'parent_payment_method'  => 'nullable|string|max:255',
+            'trace_number'           => 'nullable|string|max:255',
+            'approval_code'          => 'nullable|string|max:255',
+            'edc_terminal_id'        => 'nullable|string|max:255',
+            'bank_name'              => 'nullable|string|max:255',
+            'card_number'            => 'nullable|string|max:255',
+            'additional_info'        => 'nullable|string',
+            'notes'                  => 'nullable|string',
+            'mdr'                    => 'nullable|numeric',
+            'payment_amount'         => 'required|numeric',
+            'nett_after_mdr'         => 'nullable|numeric',
         ]);
+
+        // Ensure numeric columns are never null (DB columns have NOT NULL constraint)
+        $validatedData['mdr']           = $validatedData['mdr'] ?? 0;
+        $validatedData['payment_amount'] = $validatedData['payment_amount'] ?? 0;
+        // Auto-calculate nett_after_mdr if not provided
+        $validatedData['nett_after_mdr'] = $validatedData['nett_after_mdr']
+            ?? ($validatedData['payment_amount'] - $validatedData['mdr']);
 
         Transaction::create($validatedData);
 
-        return redirect()->route('transactions.index')->with('success', 'Manual Transaction Added Successfully!');
+        return redirect()->route('transactions.index')->with('success', 'Transaction added successfully!');
     }
 
     public function import()
@@ -60,11 +88,12 @@ class TransactionController extends Controller
         set_time_limit(0);
 
         try {
-            // Remove existing to prevent duplicates on fresh import
-            Transaction::truncate();
-
-            // Trigger import from the Dataset.xlsx located in public folder
-            Excel::import(new TransactionsImport, public_path('Dataset.xlsx'));
+            // Disable observer during bulk import (data comes FROM the Excel file,
+            // no need to write it back — would be circular and slow)
+            Transaction::withoutEvents(function () {
+                Transaction::truncate();
+                Excel::import(new TransactionsImport, public_path('Dataset.xlsx'));
+            });
 
             return redirect()->route('transactions.index')
                 ->with('success', 'Dataset.xlsx imported successfully! ' . Transaction::count() . ' records loaded.');
@@ -80,99 +109,15 @@ class TransactionController extends Controller
 
     public function export()
     {
-        // Raise memory limit temporarily for this large spreadsheet operation
-        ini_set('memory_limit', '512M');
-        set_time_limit(0);
+        $result = ExcelSyncService::syncAllTransactions();
 
-        $filePath = public_path('Dataset.xlsx');
-
-        try {
-            // Load existing Dataset.xlsx (read-data-only saves ~50% RAM)
-            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($filePath);
-            $reader->setReadDataOnly(false); // need write access
-
-            $spreadsheet = $reader->load($filePath);
-            $sheet       = $spreadsheet->getActiveSheet();
-
-            // Collect Sales Numbers already in the file (column A, starting row 2)
-            $highestRow   = $sheet->getHighestRow();
-            $existingKeys = [];
-            for ($row = 2; $row <= $highestRow; $row++) {
-                $val = $sheet->getCell("A{$row}")->getValue();
-                if ($val) {
-                    $existingKeys[$val] = true;
-                }
-            }
-
-            // Get all DB transactions NOT already in the file
-            $newTransactions = Transaction::orderBy('sales_date_in', 'asc')
-                ->get()
-                ->filter(function ($t) use ($existingKeys) {
-                    return !isset($existingKeys[$t->sales_number]);
-                });
-
-            // Append each new transaction as a row
-            $nextRow  = $highestRow + 1;
-            $newCount = 0;
-            foreach ($newTransactions as $t) {
-                $sheet->setCellValue("A{$nextRow}", $t->sales_number);
-                $sheet->setCellValue("B{$nextRow}", $t->bill_number);
-                $sheet->setCellValue("C{$nextRow}", $t->sales_date_in ? $t->sales_date_in->format('Y-m-d H:i:s') : '');
-                $sheet->setCellValue("D{$nextRow}", $t->sales_date_out ? $t->sales_date_out->format('Y-m-d H:i:s') : '');
-                $sheet->setCellValue("E{$nextRow}", $t->brand);
-                $sheet->setCellValue("F{$nextRow}", $t->area);
-                $sheet->setCellValue("G{$nextRow}", $t->city);
-                $sheet->setCellValue("H{$nextRow}", $t->branch);
-                $sheet->setCellValue("I{$nextRow}", $t->visit_purpose);
-                $sheet->setCellValue("J{$nextRow}", $t->reguler_member_code);
-                $sheet->setCellValue("K{$nextRow}", $t->reguler_member_name);
-                $sheet->setCellValue("L{$nextRow}", $t->loyalty_member_code);
-                $sheet->setCellValue("M{$nextRow}", $t->loyalty_member_name);
-                $sheet->setCellValue("N{$nextRow}", $t->loyalty_member_type);
-                $sheet->setCellValue("O{$nextRow}", $t->employee_code);
-                $sheet->setCellValue("P{$nextRow}", $t->employee_name);
-                $sheet->setCellValue("Q{$nextRow}", $t->external_employee_code);
-                $sheet->setCellValue("R{$nextRow}", $t->external_employee_name);
-                $sheet->setCellValue("S{$nextRow}", $t->payment_method);
-                $sheet->setCellValue("T{$nextRow}", $t->parent_payment_method);
-                $sheet->setCellValue("U{$nextRow}", $t->trace_number);
-                $sheet->setCellValue("V{$nextRow}", $t->approval_code);
-                $sheet->setCellValue("W{$nextRow}", $t->edc_terminal_id);
-                $sheet->setCellValue("X{$nextRow}", $t->bank_name);
-                $sheet->setCellValue("Y{$nextRow}", $t->card_number);
-                $sheet->setCellValue("Z{$nextRow}", $t->additional_info);
-                $sheet->setCellValue("AA{$nextRow}", $t->notes);
-                $sheet->setCellValue("AB{$nextRow}", $t->mdr);
-                $sheet->setCellValue("AC{$nextRow}", $t->payment_amount);
-                $sheet->setCellValue("AD{$nextRow}", $t->nett_after_mdr);
-                $nextRow++;
-                $newCount++;
-            }
-
-            // Save updated file back to public/Dataset.xlsx
-            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-
-            // Save to a temp path first, then replace (prevents corruption on failure)
-            $tempPath = storage_path('app/Dataset_temp.xlsx');
-            $writer->save($tempPath);
-
-            // Free memory before file operations
-            $spreadsheet->disconnectWorksheets();
-            unset($spreadsheet, $writer, $reader);
-
-            // Atomically replace the production file
-            copy($tempPath, $filePath);
-            @unlink($tempPath);
-
-            // Stream the updated file as a download
-            return response()->download($filePath, 'Dataset.xlsx', [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ])->deleteFileAfterSend(false);
-
-        } catch (\Exception $e) {
+        if ($result['success']) {
             return redirect()->route('transactions.index')
-                ->with('error', 'Export failed: ' . class_basename($e) . ' — ' . substr($e->getMessage(), 0, 200));
+                ->with('success', $result['message']);
         }
+
+        return redirect()->route('transactions.index')
+            ->with('error', $result['message']);
     }
 }
 

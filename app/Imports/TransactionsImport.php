@@ -7,9 +7,20 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class TransactionsImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading
+class TransactionsImport implements WithMultipleSheets
+{
+    public function sheets(): array
+    {
+        return [
+            'POS TRX' => new PosTransactionsSheet(),
+        ];
+    }
+}
+
+class PosTransactionsSheet implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading
 {
     public function model(array $row)
     {
