@@ -33,7 +33,7 @@
 - [Docker](#docker)
   - [Multi-Stage Dockerfile](#multi-stage-dockerfile)
   - [Docker Compose Services](#docker-compose-services)
-  - [Development vs Production](#development-vs-production)
+  - [Accessing Dev Tools](#accessing-dev-tools)
 - [Jenkins CI/CD Pipeline](#jenkins-cicd-pipeline)
   - [Pipeline Stages](#pipeline-stages)
   - [Jenkins Setup](#jenkins-setup)
@@ -65,10 +65,12 @@ automateCRM is a streamlined Customer Relationship Management platform built wit
 | **Customer Management** | Add, edit, delete, import/export customers via Excel |
 | **Service Tracking** | Assign services to customers, track expiration dates |
 | **Payment Management** | Record and view payment history per customer |
+| **Transaction Dataset** | Import POS transactions from Excel, add new ones via CRM |
+| **Live Excel Integration** | Real-time API endpoint (`/api/transactions`) for Excel Power Query — spreadsheet auto-refreshes with live data, no manual export needed |
 | **Activity Logging** | Full audit trail of all system actions |
 | **Email Notifications** | Automated service expiration reminder emails |
 | **Dashboard Analytics** | Visual overview of business metrics |
-| **REST API** | JSON API endpoints secured with Laravel Sanctum |
+| **REST API** | JSON API endpoints for transactions, customers, services, and health checks |
 | **Queue Workers** | Background job processing via Redis queues |
 | **Task Scheduler** | Cron-like scheduler running inside Docker |
 
@@ -97,14 +99,15 @@ automateCRM is a streamlined Customer Relationship Management platform built wit
 | Tool | Role |
 |---|---|
 | **Docker** | Multi-stage image build (Node → Composer → PHP-FPM+Nginx+Supervisor) |
-| **Docker Compose** | Full local stack orchestration — 6 services |
+| **Docker Compose** | Full local stack orchestration — 7 services |
 | **Jenkins** | Self-hosted CI/CD server with declarative pipeline |
 | **SonarCloud** | Continuous code quality & security analysis with Quality Gate |
 | **Trivy** | Docker image vulnerability scanning (HIGH/CRITICAL CVEs) |
 | **Terraform** | Infrastructure as Code — AWS ECS Fargate, RDS, ElastiCache, ALB, VPC |
 | **PHPUnit** | Automated test suite with code coverage (PCOV) |
 | **Laravel Pint** | PHP code style linting (PSR-12) |
-| **Mailhog** | Local SMTP email trap for development |
+| **phpMyAdmin** | Web-based MySQL administration GUI (port 8081) |
+| **Redis Commander** | Web-based Redis data browser GUI (port 8082) |
 | **Make** | Developer command shortcuts |
 
 ---
@@ -131,16 +134,17 @@ automateCRM is a streamlined Customer Relationship Management platform built wit
          │    → Deploy to Staging (master only)         │
          └──────┬──────────────────┬────────────────────┘
                 │                  │
-     ┌──────────▼──────┐  ┌────────▼──────────────────┐
-     │   SonarCloud    │  │   Local Docker Stack       │
-     │  (Quality Gate) │  │                           │
-     └─────────────────┘  │  app       :8080 (Nginx)  │
-                          │  mysql     :3306           │
-                          │  redis     :6379           │
-                          │  queue     (worker)        │
-                          │  scheduler (cron)          │
-                          │  mailhog   :8025           │
-                          └───────────────────────────┘
+     ┌──────────▼──────┐  ┌────────▼──────────────────────┐
+     │   SonarCloud    │  │   Local Docker Stack           │
+     │  (Quality Gate) │  │                               │
+     └─────────────────┘  │  app             :8080 (Nginx) │
+                          │  mysql           :3306         │
+                          │  redis           :6379         │
+                          │  queue           (worker)      │
+                          │  scheduler       (cron)        │
+                          │  phpmyadmin      :8081         │
+                          │  redis-commander :8082         │
+                          └────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────┐
 │                   AWS (via Terraform)                            │
@@ -197,7 +201,7 @@ docker images automatecrm-app
 
 ### Docker Compose Services
 
-**`docker-compose.yml`** — Production stack (6 services):
+**`docker-compose.yml`** — Full stack (7 services):
 
 | Container | Image | Port | Role |
 |---|---|---|---|
@@ -206,7 +210,8 @@ docker images automatecrm-app
 | `redis` | `redis:7-alpine` | `6379:6379` | Cache, sessions, and queue backend |
 | `queue` | Built from `Dockerfile` | — | `php artisan queue:work redis --tries=3` |
 | `scheduler` | Built from `Dockerfile` | — | Runs `php artisan schedule:run` every 60 seconds |
-| `mailhog` | `mailhog/mailhog` | `8025:8025` | SMTP trap — catches all outbound email |
+| `phpmyadmin` | `phpmyadmin/phpmyadmin` | `8081:80` | Web-based MySQL administration UI |
+| `redis-commander` | `rediscommander/redis-commander` | `8082:8081` | Redis data browser UI |
 
 **Networking:** All services share the `automatecrm-network` bridge network. Inter-service communication uses container names (e.g. `DB_HOST=db`, `REDIS_HOST=redis`).
 
@@ -220,21 +225,17 @@ docker images automatecrm-app
 - `redis` — `redis-cli ping` every 10s
 - `queue` / `scheduler` — `php -r "echo 'ok';"` every 30s
 
-### Development vs Production
+### Accessing Dev Tools
 
-**`docker-compose.dev.yml`** — Extends production with developer tools:
+phpMyAdmin and Redis Commander are included in the main `docker-compose.yml` — no separate dev overlay needed:
 
-| Container | Port | Role |
+| Tool | URL | Description |
 |---|---|---|
-| `phpmyadmin` | `8081:80` | Web-based MySQL administration UI |
-| `redis-commander` | `8082:8081` | Redis data browser UI |
-
-Start with dev tools:
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-# Or:
-make docker-up-dev
-```
+| **App** | `http://localhost:8080` | CRM web interface |
+| **phpMyAdmin** | `http://localhost:8081` | MySQL database browser |
+| **Redis Commander** | `http://localhost:8082` | Redis data browser |
+| **API (Transactions)** | `http://localhost:8080/api/transactions` | Live JSON for Excel Power Query |
+| **API (Health)** | `http://localhost:8080/api/health` | Container health check |
 
 ---
 
@@ -293,9 +294,8 @@ Security Scan (Trivy)
     ▼ (master branch only)
 Deploy to Staging
     ├── docker compose up -d --remove-orphans
-    ├── docker compose exec -T app php artisan migrate --force
-    ├── docker compose exec -T app php artisan config:cache
-    └── docker compose exec -T app php artisan route:cache
+    ├── docker system prune -f (cleanup old images)
+    └── Migrations & config caching handled by entrypoint.sh at container boot
 ```
 
 **Pipeline options:**
@@ -520,17 +520,10 @@ docker compose exec app php artisan migrate --seed
 docker compose exec app php artisan config:cache
 docker compose exec app php artisan route:cache
 
-# App:     http://localhost:8080
-# Mailhog: http://localhost:8025
-# Login:   admin@admin.com / password
-```
-
-Start with developer tools (phpMyAdmin + Redis Commander):
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-
+# App:             http://localhost:8080
 # phpMyAdmin:      http://localhost:8081
 # Redis Commander: http://localhost:8082
+# Login:           admin@admin.com / password
 ```
 
 ### Manual Setup (without Docker)
@@ -690,9 +683,8 @@ Key environment variables used across the Docker stack:
 | `SESSION_DRIVER` | `redis` | Session backend |
 | `QUEUE_CONNECTION` | `redis` | Queue backend |
 | `MAIL_MAILER` | `smtp` | Mail driver |
-| `MAIL_HOST` | `mailhog` | SMTP server (Mailhog in dev) |
-| `MAIL_PORT` | `1025` | SMTP port |
-| `MAILHOG_PORT` | `8025` | Mailhog web UI port |
+| `MAIL_HOST` | `smtp.mailtrap.io` | SMTP server |
+| `MAIL_PORT` | `2525` | SMTP port |
 | `SONAR_TOKEN` | — | SonarCloud API token (Jenkins credential) |
 
 ---
@@ -738,11 +730,11 @@ automatecrm-cicd-pipeline/
 │
 ├── docs/
 │   ├── DEVOPS.md                 # Extended DevOps & infrastructure guide
-│   └── SETUP.md                  # Local setup guide
+│   ├── SETUP.md                  # Local setup guide
+│   └── FULL_DOCUMENTATION.md     # Complete end-to-end documentation
 │
 ├── Dockerfile                    # 3-stage production image build
-├── docker-compose.yml            # Production stack (6 services)
-├── docker-compose.dev.yml        # Dev overlay (phpMyAdmin, Redis Commander)
+├── docker-compose.yml            # Full stack (7 services incl. dev tools)
 ├── docker-compose.jenkins.yml    # Jenkins CI server
 ├── Jenkinsfile                   # Declarative Jenkins pipeline
 ├── Makefile                      # Developer command shortcuts

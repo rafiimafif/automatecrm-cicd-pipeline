@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Imports\TransactionsImport;
 use App\Exports\TransactionsExport;
-use App\Services\ExcelSyncService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -109,15 +108,7 @@ class TransactionController extends Controller
 
     public function export()
     {
-        $result = ExcelSyncService::syncAllTransactions();
-
-        if ($result['success']) {
-            return redirect()->route('transactions.index')
-                ->with('success', $result['message']);
-        }
-
-        return redirect()->route('transactions.index')
-            ->with('error', $result['message']);
+        return Excel::download(new TransactionsExport, 'transactions.xlsx');
     }
 }
 

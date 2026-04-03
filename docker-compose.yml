@@ -41,7 +41,6 @@ services:
       MAIL_PORT: ${MAIL_PORT:-2525}
     volumes:
       - app-storage:/var/www/html/storage
-      - ./public:/var/www/html/public
     networks:
       - automatecrm-network
     ports:
