@@ -21,12 +21,64 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        $transactions = Transaction::orderBy('sales_date_in', 'desc')->take(10)->get();
-        $paymentMethods = Transaction::select('payment_method', DB::raw('count(*) as total'))
+        // Basic financials
+        $totalPayment = Transaction::sum('payment_amount');
+        $totalMdr = Transaction::sum('mdr');
+        $totalNett = Transaction::sum('nett_after_mdr');
+        $transactionCount = Transaction::count();
+        $avgTransaction = $transactionCount > 0 ? $totalPayment / $transactionCount : 0;
+
+        // Top brand
+        $topBrand = Transaction::select('brand', DB::raw('count(*) as total'))
+            ->groupBy('brand')
+            ->orderByDesc('total')
+            ->first();
+
+        // Payment methods breakdown
+        $paymentMethods = Transaction::select('payment_method', DB::raw('count(*) as total'), DB::raw('SUM(payment_amount) as amount'))
             ->groupBy('payment_method')
+            ->orderByDesc('total')
             ->get();
 
-        return view('welcome', compact('transactions', 'paymentMethods'));
+        // Top payment methods by amount
+        $topPaymentByAmount = Transaction::select('payment_method', DB::raw('SUM(payment_amount) as total_amount'))
+            ->groupBy('payment_method')
+            ->orderByDesc('total_amount')
+            ->take(5)
+            ->get();
+
+        // Brands breakdown
+        $brandBreakdown = Transaction::select('brand', DB::raw('count(*) as total'), DB::raw('SUM(payment_amount) as amount'))
+            ->groupBy('brand')
+            ->orderByDesc('total')
+            ->take(8)
+            ->get();
+
+        // Recent transactions
+        $transactions = Transaction::orderBy('sales_date_in', 'desc')->take(15)->get();
+
+        // Daily transaction trend (last 30 days)
+        $dailyTrend = Transaction::select(
+            DB::raw('DATE(sales_date_in) as date'),
+            DB::raw('count(*) as count'),
+            DB::raw('SUM(payment_amount) as amount')
+        )
+        ->where('sales_date_in', '>=', now()->subDays(30))
+        ->groupBy(DB::raw('DATE(sales_date_in)'))
+        ->orderBy('date')
+        ->get();
+
+        // City breakdown
+        $cityBreakdown = Transaction::select('city', DB::raw('count(*) as total'), DB::raw('SUM(payment_amount) as amount'))
+            ->groupBy('city')
+            ->orderByDesc('total')
+            ->take(10)
+            ->get();
+
+        return view('welcome', compact(
+            'transactions', 'paymentMethods', 'topBrand', 'totalPayment', 'totalMdr', 'totalNett', 'transactionCount', 'avgTransaction',
+            'topPaymentByAmount', 'brandBreakdown', 'dailyTrend', 'cityBreakdown'
+        ));
     }
 
     public static function finance()

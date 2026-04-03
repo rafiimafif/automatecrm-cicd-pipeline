@@ -30,30 +30,30 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Sales Dashboard</h1>
-                        <a href="{{ route('transactions.import') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-file-excel fa-sm text-white-50"></i> Re-Import Dataset.xlsx</a>
+                        <div class="btn-group" role="group">
+                            <a href="{{ route('transactions.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add Transaction</a>
+                            <a href="{{ route('transactions.import') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-excel fa-sm text-white-50"></i> Re-Import Dataset</a>
+                        </div>
                     </div>
                     
                     @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
                     @endif
 
-                    <!-- Content Row -->
-                    <div class="row">
-
-                        <!-- Earnings Card -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                    <!-- KPI Row 1: Financial Metrics -->
+                    <div class="row mb-4">
+                        <!-- Total Payment Amount -->
+                        <div class="col-xl-3 col-md-6 mb-3">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                @php
-                                                    $f = App\Http\Controllers\HomeController::finance();
-                                                @endphp
-                                                Total Payment Amount</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($f[0], 2) }}
-                                            </div>
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Payment Amount</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($totalPayment, 2) }}</div>
+                                            <div class="text-xs text-gray-500 mt-1">{{ $transactionCount }} transactions</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-money-bill fa-2x text-gray-300"></i>
@@ -63,16 +63,15 @@
                             </div>
                         </div>
 
-                        <!-- Nett After MDR Card -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <!-- Nett After MDR -->
+                        <div class="col-xl-3 col-md-6 mb-3">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Nett After MDR</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($f[2], 2) }}
-                                            </div>
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Nett After MDR</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($totalNett, 2) }}</div>
+                                            <div class="text-xs text-gray-500 mt-1" id="nettPercent">0%</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-wallet fa-2x text-gray-300"></i>
@@ -82,16 +81,15 @@
                             </div>
                         </div>
 
-                        <!-- Total MDR Card -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <!-- Total MDR Fees -->
+                        <div class="col-xl-3 col-md-6 mb-3">
                             <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Total MDR Fees
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($f[1], 2) }}</div>
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total MDR Fees</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($totalMdr, 2) }}</div>
+                                            <div class="text-xs text-gray-500 mt-1" id="mdrPercent">0%</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-percentage fa-2x text-gray-300"></i>
@@ -101,15 +99,35 @@
                             </div>
                         </div>
 
-                        <!-- Transaction Count Card -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <!-- Avg Transaction Value -->
+                        <div class="col-xl-3 col-md-6 mb-3">
                             <div class="card border-left-info shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Transactions Count</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ number_format($f[3]) }}</div>
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Avg Transaction</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($avgTransaction, 2) }}</div>
+                                            <div class="text-xs text-gray-500 mt-1">{{ $transactionCount }} total</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Row 2: Operational Metrics -->
+                    <div class="row mb-4">
+                        <!-- Transactions Count -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-secondary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Total Transactions</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ number_format($transactionCount) }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-receipt fa-2x text-gray-300"></i>
@@ -118,16 +136,164 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Top Brand -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Top Brand</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $topBrand->brand ?? 'N/A' }}</div>
+                                            <div class="text-xs text-gray-500 mt-1">{{ $topBrand->total ?? 0 }} transactions</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-crown fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Methods Count -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-dark shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">Payment Methods</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $paymentMethods->count() }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-credit-card fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cities Count -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Cities Covered</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $cityBreakdown->count() }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-map-marker-alt fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Content Row -->
-                    <div class="row">
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <!-- Transaction Trend Chart -->
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Transaction Trend (Last 30 Days)</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="transactionTrendChart" height="80"></canvas>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Payment Methods Pie -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Payment Methods</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="paymentMethodChart" height="130"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Row -->
+                    <div class="row mb-4">
+                        <!-- Top Brands -->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Top Brands</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Brand</th>
+                                                    <th>Count</th>
+                                                    <th>Amount</th>
+                                                    <th>%</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach ($brandBreakdown as $brand)
+                                                <tr>
+                                                    <td><strong>{{ $brand->brand ?: 'Unknown' }}</strong></td>
+                                                    <td><span class="badge badge-primary">{{ $brand->total }}</span></td>
+                                                    <td>Rp {{ number_format($brand->amount, 0) }}</td>
+                                                    <td>{{ round(($brand->amount / $totalPayment) * 100, 1) }}%</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Cities -->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Top Cities</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>City</th>
+                                                    <th>Transactions</th>
+                                                    <th>Total Amount</th>
+                                                    <th>%</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach ($cityBreakdown as $city)
+                                                <tr>
+                                                    <td><strong>{{ $city->city ?: 'Unknown' }}</strong></td>
+                                                    <td><span class="badge badge-info">{{ $city->total }}</span></td>
+                                                    <td>Rp {{ number_format($city->amount, 0) }}</td>
+                                                    <td>{{ round(($city->amount / $totalPayment) * 100, 1) }}%</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Tables Row -->
+                    <div class="row">
                         <!-- Recent Transactions -->
                         <div class="col-xl-8 col-lg-7">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Recent Transactions</h6>
+                                    <a href="{{ route('transactions.index') }}" class="btn btn-sm btn-link">View All →</a>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -136,23 +302,25 @@
                                                 <tr>
                                                     <th>Sales #</th>
                                                     <th>Brand</th>
-                                                    <th>Date In</th>
+                                                    <th>Date</th>
                                                     <th>Method</th>
                                                     <th>Amount</th>
+                                                    <th>Nett</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             @foreach ($transactions as $t)
                                                 <tr>
-                                                    <td>{{ $t->sales_number }}</td>
+                                                    <td><strong>{{ $t->sales_number }}</strong></td>
                                                     <td>{{ $t->brand }}</td>
-                                                    <td>{{ $t->sales_date_in ? $t->sales_date_in->format('Y-m-d H:i') : '-' }}</td>
-                                                    <td>{{ $t->payment_method }}</td>
-                                                    <td>{{ number_format($t->payment_amount, 2) }}</td>
+                                                    <td><small>{{ $t->sales_date_in ? $t->sales_date_in->format('m-d H:i') : '-' }}</small></td>
+                                                    <td><span class="badge badge-secondary">{{ $t->payment_method }}</span></td>
+                                                    <td>Rp {{ number_format($t->payment_amount, 0) }}</td>
+                                                    <td><strong>Rp {{ number_format($t->nett_after_mdr, 0) }}</strong></td>
                                                 </tr>
                                             @endforeach
                                             @if($transactions->isEmpty())
-                                                <tr><td colspan="5" class="text-center">No transactions available. Click Re-Import Dataset above.</td></tr>
+                                                <tr><td colspan="6" class="text-center text-gray-500 py-3">No transactions available</td></tr>
                                             @endif
                                             </tbody>
                                         </table>
@@ -161,11 +329,11 @@
                             </div>
                         </div>
 
-                        <!-- Payment Methods summary -->
+                        <!-- Payment Methods by Amount -->
                         <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Payment Methods</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Top Payment Methods</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -173,18 +341,20 @@
                                             <thead>
                                                 <tr>
                                                     <th>Method</th>
-                                                    <th>Count</th>
+                                                    <th>Amount</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach ($paymentMethods as $method)
+                                            @foreach ($topPaymentByAmount as $method)
                                                 <tr>
-                                                    <td>{{ $method->payment_method ?: 'Unknown' }}</td>
-                                                    <td>{{ $method->total }}</td>
+                                                    <td><strong>{{ $method->payment_method ?: 'Unknown' }}</strong></td>
+                                                    <td>
+                                                        <small>Rp {{ number_format($method->total_amount, 0) }}</small>
+                                                    </td>
                                                 </tr>
                                             @endforeach
-                                            @if($paymentMethods->isEmpty())
-                                                <tr><td colspan="2" class="text-center">No data</td></tr>
+                                            @if($topPaymentByAmount->isEmpty())
+                                                <tr><td colspan="2" class="text-center text-gray-500">No data</td></tr>
                                             @endif
                                             </tbody>
                                         </table>
@@ -193,6 +363,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -227,6 +398,97 @@
     </div>
 
     <x-main_scripts></x-main_scripts>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <script>
+        // Calculate percentages
+        const totalPayment = {{ $totalPayment }};
+        const totalMdr = {{ $totalMdr }};
+        const totalNett = {{ $totalNett }};
+        
+        document.getElementById('mdrPercent').textContent = ((totalMdr / totalPayment) * 100).toFixed(1) + '%';
+        document.getElementById('nettPercent').textContent = ((totalNett / totalPayment) * 100).toFixed(1) + '%';
+
+        // Transaction Trend Chart
+        const trendCtx = document.getElementById('transactionTrendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: [
+                    @foreach($dailyTrend as $trend)
+                        '{{ \Carbon\Carbon::parse($trend->date)->format("m-d") }}',
+                    @endforeach
+                ],
+                datasets: [{
+                    label: 'Transaction Count',
+                    data: [
+                        @foreach($dailyTrend as $trend)
+                            {{ $trend->count }},
+                        @endforeach
+                    ],
+                    borderColor: '#4e73df',
+                    backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#4e73df',
+                }, {
+                    label: 'Amount (Rp 100M)',
+                    data: [
+                        @foreach($dailyTrend as $trend)
+                            {{ $trend->amount / 100000000 }},
+                        @endforeach
+                    ],
+                    borderColor: '#858e96',
+                    backgroundColor: 'rgba(133, 142, 150, 0.05)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#858e96',
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Count' } },
+                    y1: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'Amount (Rp 100M)' }, grid: { drawOnChartArea: false } }
+                },
+                plugins: { legend: { display: true } }
+            }
+        });
+
+        // Payment Methods Pie Chart
+        const paymentCtx = document.getElementById('paymentMethodChart').getContext('2d');
+        new Chart(paymentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    @foreach($paymentMethods as $method)
+                        '{{ $method->payment_method ?: "Unknown" }}',
+                    @endforeach
+                ],
+                datasets: [{
+                    data: [
+                        @foreach($paymentMethods as $method)
+                            {{ $method->total }},
+                        @endforeach
+                    ],
+                    backgroundColor: ['#4e73df', '#858e96', '#1cc88a', '#36b9cc', '#f6c23e', '#e74c3c', '#95a5a6'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    </script>
 
 </body>
 </html>
