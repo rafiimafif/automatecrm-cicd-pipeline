@@ -69,7 +69,7 @@
         <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
         <p class="text-center mb-2"><strong>automateCRM</strong> is a CRM system for managing customers, services, and
             payments. Built by Rafii Muhammad Afif.</p>
-        <a class="btn btn-success btn-sm" href="https://github.com/rafiimafif/automateCRM">View on GitHub</a>
+        <a class="btn btn-success btn-sm" href="https://github.com/rafiimafif/automatecrm-cicd-pipeline">View on GitHub</a>
     </div>
 
 </ul>
