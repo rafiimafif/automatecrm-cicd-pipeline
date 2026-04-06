@@ -58,6 +58,9 @@
 
 automateCRM is a streamlined Customer Relationship Management platform built with **Laravel 9** and **Vue.js 3**. This repository showcases a complete **CI/CD pipeline** and **DevOps workflow** wrapping the application — from local development through automated testing, security scanning, code quality gates, Docker image building, and infrastructure provisioning on AWS.
 
+### 🌟 Portfolio Highlight: Hybrid Data Pipeline
+The system features a custom-engineered **Hybrid POS Data Pipeline** that synchronizes local Excel datasets with Google Sheets in the cloud. It utilizes a high-performance **Google Apps Script Web App** architecture, splitting large datasets into chunks and performing bulk-writes using direct memory matrix operations (`setValues`) for near-instant synchronization and 100% data consistency.
+
 ### Key Application Features
 
 | Feature | Description |
@@ -66,6 +69,7 @@ automateCRM is a streamlined Customer Relationship Management platform built wit
 | **Service Tracking** | Assign services to customers, track expiration dates |
 | **Payment Management** | Record and view payment history per customer |
 | **Transaction Dataset** | Import POS transactions from Excel, add new ones via CRM |
+| **Hybrid Cloud Sync** | **[NEW]** Real-time & Batch Synchronization with Google Sheets (Mirror-Mode) |
 | **Live Excel Integration** | Real-time API endpoint (`/api/transactions`) for Excel Power Query — spreadsheet auto-refreshes with live data, no manual export needed |
 | **Activity Logging** | Full audit trail of all system actions |
 | **Email Notifications** | Automated service expiration reminder emails |

@@ -49,8 +49,14 @@
                             │  ┌──────────┐ ┌──────▼───────┐  │
                             │  │ ElastiCache│ │  RDS MySQL   │  │
                             │  │ (Redis)   │ │  8.0         │  │
-                            │  └──────────┘ └──────────────┘  │
-                            └──────────────────────────────────┘
+                            │  └──────────┘ └──────┬───────┘  │
+                            └──────────────────────│──────────┘
+                                                   │
+                                                   ▼
+                                          ┌────────────────┐
+                                          │ Google Sheets  │
+                                          │ (Hybrid Sync)  │
+                                          └────────────────┘
 ```
 
 ---
@@ -355,6 +361,7 @@ Multiple layers of security scanning are integrated:
 | `npm audit`       | Node dependency vulnerabilities  | CI + local            |
 | **Trivy**         | Docker image CVEs                | CI (GitHub Actions)   |
 | **SonarCloud**    | Code smells, bugs, vulnerabilities| CI + local (`make sonar`) |
+| **Hybrid Sync**   | CRM → Google Sheets Consistency  | Automated (Post-Save/Import) |
 
 ---
 

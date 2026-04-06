@@ -19,8 +19,9 @@
 11. [SonarCloud Code Quality](#11-sonarcloud-code-quality)
 12. [Terraform AWS Infrastructure](#12-terraform-aws-infrastructure)
 13. [Deployment Scripts & Makefile](#13-deployment-scripts--makefile)
-14. [Local Development Setup](#14-local-development-setup)
-15. [End-to-End Workflow](#15-end-to-end-workflow)
+15. [Google Sheets Synchronization Pipeline](#15-google-sheets-synchronization-pipeline)
+16. [Local Development Setup](#16-local-development-setup)
+17. [End-to-End Workflow](#17-end-to-end-workflow)
 
 ---
 
@@ -328,6 +329,33 @@ Run `AutoRefresh` once to start the 5-second refresh loop. Close the workbook or
 ```
 
 When a transaction is added in the CRM (via the web form), it goes straight to the database. Excel's Power Query fetches the latest data from `/api/transactions` on its refresh interval. The data appears in Excel automatically — even while the file is open.
+
+---
+
+## 8. Google Sheets Synchronization Pipeline
+
+This feature provides a **Hybrid Cloud Data Bridge**, mirroring the local database to the cloud for real-time reporting and accessibility.
+
+### 8.1 Performance Architecture
+To handle 1,400+ transactions without timing out (which is a common issue with traditional Google Apps Script loops), we implemented an optimized pipeline:
+*   **Chunked Requests**: The CRM splits the database records into chunks (300 rows each).
+*   **Matrix Writes**: The Google Apps Script uses `setValues()` to perform high-speed, direct-memory matrix writes of whole datasets in one operation.
+*   **Mirror-Mode Logic**: Before each batch sync, the script wipes Row 2 to the bottom, ensuring 100% data identity and no duplicates.
+
+### 8.2 Synchronization Behavior
+| Action | Sync Trigger | Mode | Result |
+|---|---|---|---|
+| **Add Transaction** | Automatic (Post-Save) | `Real-Time` | Current record appends with the correct sequential row number. |
+| **Import Dataset** | Automatic (Post-Import) | **[Mirror-Mode]** | Entire Google Sheet is cleared and repopulated with 285+ records. |
+| **Manual Sync Button** | User Triggered | **[Mirror-Mode]** | Full data consistency check and refresh. |
+
+### 8.3 Apps Script Implementation
+The endpoint uses a **Google Apps Script Web App** deployed to the spreadsheet. This replaces the complex requirement for Google Cloud Service Accounts with a lean, manageable API script.
+
+**Technical metrics**:
+*   Handled 1,400+ records in under 20 seconds.
+*   Uses `doPost(e)` to handle incoming JSON matrix objects.
+*   Ensures numerical columns (`MDR`, `Payment`, `Nett`) are cast from PHP floats to numeric cells.
 
 ---
 
