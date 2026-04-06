@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Imports\TransactionsImport;
 use App\Exports\TransactionsExport;
+use App\Services\GoogleSyncService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionController extends Controller
 {
-    public function __construct()
+    protected $googleSync;
+
+    public function __construct(GoogleSyncService $googleSync)
     {
         $this->middleware('auth');
+        $this->googleSync = $googleSync;
     }
 
     public function index(Request $request)
@@ -77,9 +81,12 @@ class TransactionController extends Controller
         $validatedData['nett_after_mdr'] = $validatedData['nett_after_mdr']
             ?? ($validatedData['payment_amount'] - $validatedData['mdr']);
 
-        Transaction::create($validatedData);
+        $transaction = Transaction::create($validatedData);
 
-        return redirect()->route('transactions.index')->with('success', 'Transaction added successfully!');
+        // Sync to Google Sheets in real-time
+        $this->googleSync->syncOne($transaction);
+
+        return redirect()->route('transactions.index')->with('success', 'Transaction added successfully and synced to Google Sheets!');
     }
 
     public function import()
@@ -93,6 +100,9 @@ class TransactionController extends Controller
                 Transaction::truncate();
                 Excel::import(new TransactionsImport, public_path('Dataset.xlsx'));
             });
+
+            // Automatically sync the new data to Google Sheets (Mirror Mode)
+            $this->googleSync->syncBatch(Transaction::all());
 
             return redirect()->route('transactions.index')
                 ->with('success', 'Dataset.xlsx imported successfully! ' . Transaction::count() . ' records loaded.');
@@ -109,6 +119,25 @@ class TransactionController extends Controller
     public function export()
     {
         return Excel::download(new TransactionsExport, 'transactions.xlsx');
+    }
+
+    public function syncToGoogle()
+    {
+        set_time_limit(0);
+        $transactions = Transaction::orderBy('id', 'asc')->get();
+        
+        if ($transactions->isEmpty()) {
+            return redirect()->back()->with('error', 'No transactions found to sync.');
+        }
+
+        $count = $transactions->count();
+        $success = $this->googleSync->syncBatch($transactions);
+
+        if ($success) {
+            return redirect()->route('transactions.index')->with('success', "Successfully synced all {$count} records to Google Sheets in chunks!");
+        } else {
+            return redirect()->route('transactions.index')->with('error', 'Failed to sync to Google Sheets. Check your script logs or limit the sync size.');
+        }
     }
 }
 

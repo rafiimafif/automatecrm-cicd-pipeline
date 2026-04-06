@@ -14,6 +14,7 @@ Route::get('/transactions/create', [App\Http\Controllers\TransactionController::
 Route::post('/transactions', [App\Http\Controllers\TransactionController::class, 'store'])->name('transactions.store')->middleware('auth');
 Route::get('/import-transactions', [App\Http\Controllers\TransactionController::class, 'import'])->name('transactions.import')->middleware('auth');
 Route::get('/export-transactions', [App\Http\Controllers\TransactionController::class, 'export'])->name('transactions.export')->middleware('auth');
+Route::post('/sync-google-sheets', [App\Http\Controllers\TransactionController::class, 'syncToGoogle'])->name('transactions.sync_google')->middleware('auth');
 
 /* ------ customers routes ------ */
 Route::get('/customers', [App\Http\Controllers\CustomersController::class, 'index'])->middleware('auth');

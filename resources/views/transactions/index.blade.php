@@ -30,9 +30,15 @@
                                 <a href="{{ route('transactions.create') }}" class="btn btn-success btn-sm mr-2">
                                     <i class="fas fa-plus"></i> Add Transaction
                                 </a>
-                                <a href="{{ route('transactions.export') }}" class="btn btn-warning btn-sm mr-3">
-                                    <i class="fas fa-file-excel"></i> Export to Dataset.xlsx
+                                <a href="{{ route('transactions.export') }}" class="btn btn-warning btn-sm mr-2">
+                                    <i class="fas fa-file-excel"></i> Export Local
                                 </a>
+                                <form action="{{ route('transactions.sync_google') }}" method="POST" class="mr-3">
+                                    @csrf
+                                    <button type="submit" class="btn btn-info btn-sm">
+                                        <i class="fab fa-google"></i> Sync Google Sheets
+                                    </button>
+                                </form>
                                 <form action="{{ route('transactions.index') }}" method="GET" class="form-inline">
                                     <input type="text" name="search" class="form-control form-control-sm mr-2"
                                         placeholder="Search Sales # / Brand / Payment" value="{{ request('search') }}">
