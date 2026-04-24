@@ -6,8 +6,6 @@ use App\Http\Controllers\HomeController;
 use App\Models\Customer;
 use App\Models\Deal;
 use App\Models\DealStage;
-use App\Models\Service;
-use App\Models\ServicetoCustomer;
 use App\Models\Task;
 use App\Models\Transaction;
 use App\Models\User;
@@ -35,7 +33,7 @@ class DashboardTest extends TestCase
         ]);
 
         Customer::factory()->create(['created_at' => now()]);
-        
+
         $stage = DealStage::create(['name' => 'Initial', 'order' => 1]);
         Deal::factory()->create([
             'status' => 'open',
@@ -70,7 +68,7 @@ class DashboardTest extends TestCase
         ]);
 
         $finance = HomeController::finance();
-        
+
         $this->assertEquals(2000, $finance[0]);
         $this->assertEquals(20, $finance[1]);
         $this->assertEquals(1980, $finance[2]);
@@ -80,9 +78,9 @@ class DashboardTest extends TestCase
     public function test_logout_redirects_to_login()
     {
         $user = User::factory()->create();
-        
+
         $response = $this->actingAs($user)->get('/logout');
-        
+
         $response->assertRedirect('login');
         $this->assertFalse(Auth::check());
     }

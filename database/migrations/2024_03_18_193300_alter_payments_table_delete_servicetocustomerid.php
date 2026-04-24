@@ -17,7 +17,7 @@ return new class extends Migration
             Schema::table('payments', function (Blueprint $table) {
                 $table->dropColumn('servicetocustomer_id');
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Ignore SQLite drop column errors during testing
         }
     }

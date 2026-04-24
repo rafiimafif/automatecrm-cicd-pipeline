@@ -37,7 +37,7 @@ class NotesControllerTest extends TestCase
             'notable_id' => $customer->id,
             'type' => 'call',
             'content' => 'Discussed new requirements',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
     }
 
@@ -45,20 +45,20 @@ class NotesControllerTest extends TestCase
     {
         $user = $this->createUser();
         $customer = Customer::factory()->create();
-        
+
         $note = Note::create([
             'notable_type' => 'App\\Models\\Customer',
             'notable_id' => $customer->id,
             'type' => 'meeting',
             'content' => 'Delete me',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->delete('/notes/' . $note->id);
+        $response = $this->actingAs($user)->delete('/notes/'.$note->id);
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('notes', [
-            'id' => $note->id
+            'id' => $note->id,
         ]);
     }
 }

@@ -15,7 +15,7 @@ class GoogleSyncServiceTest extends TestCase
     public function test_sync_one_without_url()
     {
         putenv('GOOGLE_SHEET_WEB_APP_URL=');
-        $service = new GoogleSyncService();
+        $service = new GoogleSyncService;
         $transaction = Transaction::factory()->create();
 
         $result = $service->syncOne($transaction);
@@ -29,7 +29,7 @@ class GoogleSyncServiceTest extends TestCase
             'http://example.com/sync' => Http::response('Success', 200),
         ]);
 
-        $service = new GoogleSyncService();
+        $service = new GoogleSyncService;
         $transaction = Transaction::factory()->create();
 
         $result = $service->syncOne($transaction);
@@ -43,7 +43,7 @@ class GoogleSyncServiceTest extends TestCase
             'http://example.com/sync' => Http::response('Success', 200),
         ]);
 
-        $service = new GoogleSyncService();
+        $service = new GoogleSyncService;
         $transactions = collect([Transaction::factory()->create()]);
 
         $result = $service->syncBatch($transactions);

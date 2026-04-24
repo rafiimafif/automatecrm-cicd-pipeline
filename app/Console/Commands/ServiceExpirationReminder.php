@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\ExpirationReminder;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Mail;
@@ -46,8 +47,8 @@ class ServiceExpirationReminder extends Command
         foreach ($services as $s) {
 
             $expDate = substr($s->expiration, 0, 10);
-            if ($expDate == \Carbon\Carbon::now()->addDays(30)->format('Y-m-d')) {
-                $this->info('30 days expiration reminder sent for: ' . $s->email);
+            if ($expDate == Carbon::now()->addDays(30)->format('Y-m-d')) {
+                $this->info('30 days expiration reminder sent for: '.$s->email);
                 $data = [
                     'email' => $s->email,
                     'customer_name' => $s->customer_name,
@@ -56,8 +57,8 @@ class ServiceExpirationReminder extends Command
                 ];
                 Mail::to($s->email)->send(new ExpirationReminder($data));
 
-            } elseif ($expDate == \Carbon\Carbon::now()->addDays(15)->format('Y-m-d')) {
-                $this->info('15 days expiration reminder sent for: ' . $s->email);
+            } elseif ($expDate == Carbon::now()->addDays(15)->format('Y-m-d')) {
+                $this->info('15 days expiration reminder sent for: '.$s->email);
                 $data = [
                     'email' => $s->email,
                     'customer_name' => $s->customer_name,
@@ -65,8 +66,8 @@ class ServiceExpirationReminder extends Command
                     'expiration' => $s->expiration,
                 ];
                 Mail::to($s->email)->send(new ExpirationReminder($data));
-            } elseif ($expDate == \Carbon\Carbon::now()->addDays(5)->format('Y-m-d')) {
-                $this->info('5 days expiration reminder sent for: ' . $s->email);
+            } elseif ($expDate == Carbon::now()->addDays(5)->format('Y-m-d')) {
+                $this->info('5 days expiration reminder sent for: '.$s->email);
                 $data = [
                     'email' => $s->email,
                     'customer_name' => $s->customer_name,
@@ -74,8 +75,8 @@ class ServiceExpirationReminder extends Command
                     'expiration' => $s->expiration,
                 ];
                 Mail::to($s->email)->send(new ExpirationReminder($data));
-            } elseif ($expDate == \Carbon\Carbon::now()->format('Y-m-d')) {
-                $this->info('Today expiration reminder sent for: ' . $s->email);
+            } elseif ($expDate == Carbon::now()->format('Y-m-d')) {
+                $this->info('Today expiration reminder sent for: '.$s->email);
                 $data = [
                     'email' => $s->email,
                     'customer_name' => $s->customer_name,

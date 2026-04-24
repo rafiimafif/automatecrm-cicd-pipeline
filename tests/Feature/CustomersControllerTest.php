@@ -20,7 +20,7 @@ class CustomersControllerTest extends TestCase
     public function test_index_displays_customers()
     {
         $user = $this->createUser();
-        
+
         Customer::factory()->create([
             'fname' => 'John',
             'lname' => 'Doe',
@@ -37,7 +37,7 @@ class CustomersControllerTest extends TestCase
     public function test_index_filters_customers_by_search_and_tag()
     {
         $user = $this->createUser();
-        
+
         $customer1 = Customer::factory()->create([
             'fname' => 'Alice',
         ]);
@@ -55,7 +55,7 @@ class CustomersControllerTest extends TestCase
         $response->assertDontSee('Bob');
 
         // Filter by tag
-        $response = $this->actingAs($user)->get('/customers?tag=' . $tag->id);
+        $response = $this->actingAs($user)->get('/customers?tag='.$tag->id);
         $response->assertSee('Alice');
         $response->assertDontSee('Bob');
     }
@@ -70,7 +70,7 @@ class CustomersControllerTest extends TestCase
             'email' => 'jane@example.com',
             'phone' => '123456789',
             'company' => 'Tech Corp',
-            'address' => '123 Tech Ave'
+            'address' => '123 Tech Ave',
         ];
 
         $response = $this->actingAs($user)->post('/customer_add', $data);
@@ -78,7 +78,7 @@ class CustomersControllerTest extends TestCase
         $response->assertRedirect('/customers');
         $this->assertDatabaseHas('customers', [
             'fname' => 'Jane',
-            'email' => 'jane@example.com'
+            'email' => 'jane@example.com',
         ]);
     }
 
@@ -87,7 +87,7 @@ class CustomersControllerTest extends TestCase
         $user = $this->createUser();
         $customer = Customer::factory()->create();
 
-        $response = $this->actingAs($user)->get('/customer_edit/' . $customer->id);
+        $response = $this->actingAs($user)->get('/customer_edit/'.$customer->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('customers.single');
@@ -99,22 +99,22 @@ class CustomersControllerTest extends TestCase
         $user = $this->createUser();
         $customer = Customer::factory()->create([
             'fname' => 'Old Name',
-            'email' => 'old@example.com'
+            'email' => 'old@example.com',
         ]);
 
         $data = [
             'fname' => 'New Name',
             'lname' => 'Lastname',
-            'email' => 'new@example.com'
+            'email' => 'new@example.com',
         ];
 
-        $response = $this->actingAs($user)->put('/customer_update/' . $customer->id, $data);
+        $response = $this->actingAs($user)->put('/customer_update/'.$customer->id, $data);
 
         $response->assertRedirect(route('customer_edit', ['id' => $customer->id]));
         $this->assertDatabaseHas('customers', [
             'id' => $customer->id,
             'fname' => 'New Name',
-            'email' => 'new@example.com'
+            'email' => 'new@example.com',
         ]);
     }
 
@@ -123,11 +123,11 @@ class CustomersControllerTest extends TestCase
         $user = $this->createUser();
         $customer = Customer::factory()->create();
 
-        $response = $this->actingAs($user)->delete('/customer_delete/' . $customer->id);
+        $response = $this->actingAs($user)->delete('/customer_delete/'.$customer->id);
 
         $response->assertRedirect('/customers');
         $this->assertSoftDeleted('customers', [
-            'id' => $customer->id
+            'id' => $customer->id,
         ]);
     }
 }

@@ -20,19 +20,19 @@ class TasksControllerTest extends TestCase
     public function test_index_displays_pending_tasks_by_default()
     {
         $user = $this->createUser();
-        
+
         Task::create([
             'title' => 'Pending Task',
             'status' => 'pending',
             'priority' => 'medium',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
         Task::create([
             'title' => 'Completed Task',
             'status' => 'completed',
             'priority' => 'medium',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
         $response = $this->actingAs($user)->get('/tasks');
@@ -46,19 +46,19 @@ class TasksControllerTest extends TestCase
     public function test_index_filters_tasks()
     {
         $user = $this->createUser();
-        
+
         Task::create([
             'title' => 'Urgent Pending Task',
             'status' => 'pending',
             'priority' => 'urgent',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
         Task::create([
             'title' => 'Low Pending Task',
             'status' => 'pending',
             'priority' => 'low',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
         // Filter by priority
@@ -73,7 +73,7 @@ class TasksControllerTest extends TestCase
             'title' => 'Completed Task',
             'status' => 'completed',
             'priority' => 'medium',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
         $response = $this->actingAs($user)->get('/tasks?status=completed');
         $response->assertSee('Completed Task');
@@ -94,7 +94,7 @@ class TasksControllerTest extends TestCase
             'priority' => 'high',
             'taskable_type' => 'App\\Models\\Customer',
             'taskable_id' => $customer->id,
-            'due_date' => now()->addDays(2)->format('Y-m-d')
+            'due_date' => now()->addDays(2)->format('Y-m-d'),
         ];
 
         $response = $this->actingAs($user)->post('/tasks', $data);
@@ -105,25 +105,25 @@ class TasksControllerTest extends TestCase
             'priority' => 'high',
             'status' => 'pending',
             'taskable_type' => 'App\\Models\\Customer',
-            'taskable_id' => $customer->id
+            'taskable_id' => $customer->id,
         ]);
     }
 
     public function test_update_modifies_task()
     {
         $user = $this->createUser();
-        
+
         $task = Task::create([
             'title' => 'Old Title',
             'status' => 'pending',
             'priority' => 'medium',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->put('/tasks/' . $task->id, [
+        $response = $this->actingAs($user)->put('/tasks/'.$task->id, [
             'title' => 'New Title',
             'priority' => 'urgent',
-            'status' => 'completed'
+            'status' => 'completed',
         ]);
 
         $response->assertRedirect();
@@ -131,26 +131,26 @@ class TasksControllerTest extends TestCase
             'id' => $task->id,
             'title' => 'New Title',
             'priority' => 'urgent',
-            'status' => 'completed'
+            'status' => 'completed',
         ]);
     }
 
     public function test_destroy_deletes_task()
     {
         $user = $this->createUser();
-        
+
         $task = Task::create([
             'title' => 'Delete Me',
             'status' => 'pending',
             'priority' => 'medium',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->delete('/tasks/' . $task->id);
+        $response = $this->actingAs($user)->delete('/tasks/'.$task->id);
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('tasks', [
-            'id' => $task->id
+            'id' => $task->id,
         ]);
     }
 }

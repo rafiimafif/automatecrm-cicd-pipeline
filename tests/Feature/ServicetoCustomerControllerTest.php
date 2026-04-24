@@ -25,7 +25,7 @@ class ServicetoCustomerControllerTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
 
         $data = [
@@ -33,7 +33,7 @@ class ServicetoCustomerControllerTest extends TestCase
             'service_id' => $service->id,
             'price' => 120,
             'expiration' => now()->addYear()->format('Y-m-d'),
-            'reminder' => true
+            'reminder' => true,
         ];
 
         $response = $this->actingAs($user)->post('/addservicetocustomer', $data);
@@ -43,7 +43,7 @@ class ServicetoCustomerControllerTest extends TestCase
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 120,
-            'reminder' => 1
+            'reminder' => 1,
         ]);
     }
 
@@ -54,23 +54,23 @@ class ServicetoCustomerControllerTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         $stc = ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->addYear()->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
-        $response = $this->actingAs($user)->get('/servicetocustomer/' . $stc->id . '/edit');
+        $response = $this->actingAs($user)->get('/servicetocustomer/'.$stc->id.'/edit');
 
         $response->assertStatus(200);
         $response->assertJson([
             'id' => $stc->id,
-            'price' => 100
+            'price' => 100,
         ]);
     }
 
@@ -81,26 +81,26 @@ class ServicetoCustomerControllerTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         $stc = ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->addYear()->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
-        $response = $this->actingAs($user)->put('/servicetocustomer/' . $stc->id, [
+        $response = $this->actingAs($user)->put('/servicetocustomer/'.$stc->id, [
             'service_id' => $service->id,
-            'price' => 150
+            'price' => 150,
         ]);
 
         $response->assertRedirect(route('customer_edit', ['id' => $customer->id]));
         $this->assertDatabaseHas('servicetocustomer', [
             'id' => $stc->id,
-            'price' => 150
+            'price' => 150,
         ]);
     }
 
@@ -111,25 +111,25 @@ class ServicetoCustomerControllerTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         $stc = ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
-        $response = $this->actingAs($user)->post('/service/' . $stc->id . '/renew', [
+        $response = $this->actingAs($user)->post('/service/'.$stc->id.'/renew', [
             'service_id' => $stc->id,
             'new_price' => 200,
-            'new_expiration_date' => now()->addYear()->format('Y-m-d')
+            'new_expiration_date' => now()->addYear()->format('Y-m-d'),
         ]);
 
         $response->assertRedirect();
-        
+
         // Assert old record was archived
         $this->assertDatabaseHas('servicetocustomer_records', [
             'servicetocustomer_id' => $stc->id,
@@ -139,7 +139,7 @@ class ServicetoCustomerControllerTest extends TestCase
         $this->assertDatabaseHas('servicetocustomer', [
             'id' => $stc->id,
             'price' => 200,
-            'payment_id' => null
+            'payment_id' => null,
         ]);
     }
 
@@ -150,22 +150,22 @@ class ServicetoCustomerControllerTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         $stc = ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
-        $response = $this->actingAs($user)->delete('/servicetocustomer/' . $stc->id);
+        $response = $this->actingAs($user)->delete('/servicetocustomer/'.$stc->id);
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('servicetocustomer', [
-            'id' => $stc->id
+            'id' => $stc->id,
         ]);
     }
 
@@ -176,7 +176,7 @@ class ServicetoCustomerControllerTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
 
         $stc = ServicetoCustomer::create([
@@ -185,12 +185,12 @@ class ServicetoCustomerControllerTest extends TestCase
             'price' => 100,
             'expiration' => now()->format('Y-m-d'),
             'reminder' => 0,
-            'payment_id' => 1 // simulating paid_status assuming it checks this
+            'payment_id' => 1, // simulating paid_status assuming it checks this
         ]);
 
         $response = $this->actingAs($user)->delete('/customer/service/delete', [
             'customer_id' => $customer->id,
-            'service_id' => $stc->id
+            'service_id' => $stc->id,
         ]);
 
         $response->assertRedirect();
@@ -207,10 +207,10 @@ class ServicetoCustomerControllerTest extends TestCase
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
-        $response = $this->actingAs($user)->get('/servicetocustomer/' . $stc->id . '/details');
+        $response = $this->actingAs($user)->get('/servicetocustomer/'.$stc->id.'/details');
         $response->assertStatus(200);
         $response->assertViewIs('customers.records.index');
     }
@@ -225,18 +225,18 @@ class ServicetoCustomerControllerTest extends TestCase
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
         $response = $this->actingAs($user)->post('/servicetocustomer/update_reminder_status', [
             'id' => $stc->id,
-            'reminder' => 0
+            'reminder' => 0,
         ]);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('servicetocustomer', [
             'id' => $stc->id,
-            'reminder' => 0
+            'reminder' => 0,
         ]);
     }
 }

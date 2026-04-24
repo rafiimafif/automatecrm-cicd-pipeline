@@ -20,11 +20,11 @@ class TagsControllerTest extends TestCase
     public function test_index_displays_tags()
     {
         $user = $this->createUser();
-        
+
         Tag::create([
             'name' => 'VIP',
             'slug' => 'vip',
-            'color' => '#ff0000'
+            'color' => '#ff0000',
         ]);
 
         $response = $this->actingAs($user)->get('/tags');
@@ -49,25 +49,25 @@ class TagsControllerTest extends TestCase
         $this->assertDatabaseHas('tags', [
             'name' => 'Important',
             'slug' => 'important',
-            'color' => '#00ff00'
+            'color' => '#00ff00',
         ]);
     }
 
     public function test_destroy_deletes_tag()
     {
         $user = $this->createUser();
-        
+
         $tag = Tag::create([
             'name' => 'Delete Me',
             'slug' => 'delete-me',
-            'color' => '#0000ff'
+            'color' => '#0000ff',
         ]);
 
-        $response = $this->actingAs($user)->delete('/tags/' . $tag->id);
+        $response = $this->actingAs($user)->delete('/tags/'.$tag->id);
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('tags', [
-            'id' => $tag->id
+            'id' => $tag->id,
         ]);
     }
 
@@ -75,17 +75,17 @@ class TagsControllerTest extends TestCase
     {
         $user = $this->createUser();
         $customer = Customer::factory()->create();
-        
+
         $tag = Tag::create([
             'name' => 'VIP',
             'slug' => 'vip',
-            'color' => '#ff0000'
+            'color' => '#ff0000',
         ]);
 
         $response = $this->actingAs($user)->post('/tags/attach', [
             'tag_id' => $tag->id,
             'taggable_type' => 'App\\Models\\Customer',
-            'taggable_id' => $customer->id
+            'taggable_id' => $customer->id,
         ]);
 
         $response->assertRedirect();
@@ -96,20 +96,20 @@ class TagsControllerTest extends TestCase
     {
         $user = $this->createUser();
         $customer = Customer::factory()->create();
-        
+
         $tag = Tag::create([
             'name' => 'VIP',
             'slug' => 'vip',
-            'color' => '#ff0000'
+            'color' => '#ff0000',
         ]);
-        
+
         $customer->tags()->attach($tag->id);
         $this->assertTrue($customer->fresh()->tags->contains($tag->id));
 
         $response = $this->actingAs($user)->post('/tags/detach', [
             'tag_id' => $tag->id,
             'taggable_type' => 'App\\Models\\Customer',
-            'taggable_id' => $customer->id
+            'taggable_id' => $customer->id,
         ]);
 
         $response->assertRedirect();

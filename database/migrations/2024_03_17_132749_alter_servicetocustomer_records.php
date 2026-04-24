@@ -18,7 +18,7 @@ return new class extends Migration
                 $table->dropColumn('amount_paid');
                 $table->dropColumn('payment_method');
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Ignore SQLite drop column errors during testing
         }
 

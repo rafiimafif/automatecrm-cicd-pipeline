@@ -9,7 +9,7 @@ class RenewalServiceTest extends TestCase
 {
     public function test_handle_renewal()
     {
-        $service = new RenewalService();
+        $service = new RenewalService;
         $service->handleRenewal(null);
         $this->assertTrue(true);
     }

@@ -3,8 +3,9 @@
 namespace Tests\Unit;
 
 use App\Models\Customer;
-use App\Models\Service;
-use App\Models\ServicetoCustomer;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,17 +17,17 @@ class CustomerModelTest extends TestCase
     {
         $customer = Customer::factory()->create([
             'fname' => 'John',
-            'lname' => 'Doe'
+            'lname' => 'Doe',
         ]);
 
         $this->assertEquals('John Doe', $customer->full_name);
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $customer->services());
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $customer->payments());
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $customer->servicetocustomer());
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphToMany::class, $customer->tags());
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $customer->notes());
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $customer->deals());
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $customer->tasks());
+        $this->assertInstanceOf(HasMany::class, $customer->services());
+        $this->assertInstanceOf(HasMany::class, $customer->payments());
+        $this->assertInstanceOf(HasMany::class, $customer->servicetocustomer());
+        $this->assertInstanceOf(MorphToMany::class, $customer->tags());
+        $this->assertInstanceOf(MorphMany::class, $customer->notes());
+        $this->assertInstanceOf(HasMany::class, $customer->deals());
+        $this->assertInstanceOf(MorphMany::class, $customer->tasks());
     }
 }

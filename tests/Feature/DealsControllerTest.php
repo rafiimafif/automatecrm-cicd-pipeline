@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Customer;
 use App\Models\Deal;
 use App\Models\DealStage;
 use App\Models\User;
@@ -16,9 +15,9 @@ class DealsControllerTest extends TestCase
     private function createDealStage($order = 1)
     {
         return DealStage::create([
-            'name' => 'Test Stage ' . $order,
+            'name' => 'Test Stage '.$order,
             'order' => $order,
-            'color' => '#ffffff'
+            'color' => '#ffffff',
         ]);
     }
 
@@ -31,13 +30,13 @@ class DealsControllerTest extends TestCase
     {
         $user = $this->createUser();
         $stage = $this->createDealStage();
-        
+
         Deal::create([
             'title' => 'Test Deal',
             'deal_stage_id' => $stage->id,
             'value' => 1000,
             'status' => 'open',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
         $response = $this->actingAs($user)->get('/deals');
@@ -64,7 +63,7 @@ class DealsControllerTest extends TestCase
         $this->assertDatabaseHas('deals', [
             'title' => 'New Deal',
             'value' => 5000,
-            'status' => 'open'
+            'status' => 'open',
         ]);
     }
 
@@ -72,16 +71,16 @@ class DealsControllerTest extends TestCase
     {
         $user = $this->createUser();
         $stage = $this->createDealStage();
-        
+
         $deal = Deal::create([
             'title' => 'Show Deal',
             'deal_stage_id' => $stage->id,
             'value' => 2000,
             'status' => 'open',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get('/deals/' . $deal->id);
+        $response = $this->actingAs($user)->get('/deals/'.$deal->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('deals.show');
@@ -92,19 +91,19 @@ class DealsControllerTest extends TestCase
     {
         $user = $this->createUser();
         $stage = $this->createDealStage();
-        
+
         $deal = Deal::create([
             'title' => 'Old Title',
             'deal_stage_id' => $stage->id,
             'value' => 2000,
             'status' => 'open',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->put('/deals/' . $deal->id, [
+        $response = $this->actingAs($user)->put('/deals/'.$deal->id, [
             'title' => 'New Title',
             'value' => 3000,
-            'status' => 'won'
+            'status' => 'won',
         ]);
 
         $response->assertRedirect();
@@ -112,7 +111,7 @@ class DealsControllerTest extends TestCase
             'id' => $deal->id,
             'title' => 'New Title',
             'value' => 3000,
-            'status' => 'won'
+            'status' => 'won',
         ]);
     }
 
@@ -121,23 +120,23 @@ class DealsControllerTest extends TestCase
         $user = $this->createUser();
         $stage1 = $this->createDealStage(1);
         $stage2 = $this->createDealStage(2);
-        
+
         $deal = Deal::create([
             'title' => 'Ajax Deal',
             'deal_stage_id' => $stage1->id,
             'value' => 2000,
             'status' => 'open',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->patchJson('/deals/' . $deal->id . '/stage', [
+        $response = $this->actingAs($user)->patchJson('/deals/'.$deal->id.'/stage', [
             'deal_stage_id' => $stage2->id,
         ]);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('deals', [
             'id' => $deal->id,
-            'deal_stage_id' => $stage2->id
+            'deal_stage_id' => $stage2->id,
         ]);
     }
 
@@ -145,20 +144,20 @@ class DealsControllerTest extends TestCase
     {
         $user = $this->createUser();
         $stage = $this->createDealStage();
-        
+
         $deal = Deal::create([
             'title' => 'Delete Deal',
             'deal_stage_id' => $stage->id,
             'value' => 2000,
             'status' => 'open',
-            'assigned_to' => $user->id
+            'assigned_to' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->delete('/deals/' . $deal->id);
+        $response = $this->actingAs($user)->delete('/deals/'.$deal->id);
 
         $response->assertRedirect(route('deals.index'));
         $this->assertSoftDeleted('deals', [
-            'id' => $deal->id
+            'id' => $deal->id,
         ]);
     }
 }

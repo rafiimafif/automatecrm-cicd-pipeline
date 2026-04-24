@@ -11,7 +11,7 @@ class ServiceProviderTest extends TestCase
     {
         $provider = new BroadcastServiceProvider($this->app);
         $provider->boot();
-        
+
         // If no exception is thrown, we consider it a success for basic coverage
         $this->assertTrue(true);
     }

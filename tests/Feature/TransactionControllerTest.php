@@ -6,6 +6,8 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Services\GoogleSyncService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
+use Maatwebsite\Excel\Facades\Excel;
 use Mockery;
 use Tests\TestCase;
 
@@ -21,7 +23,7 @@ class TransactionControllerTest extends TestCase
     public function test_index_displays_transactions()
     {
         $user = $this->createUser();
-        
+
         Transaction::factory()->create([
             'sales_number' => 'SALE-12345',
             'brand' => 'Acme Corp',
@@ -37,7 +39,7 @@ class TransactionControllerTest extends TestCase
     public function test_index_filters_transactions()
     {
         $user = $this->createUser();
-        
+
         Transaction::factory()->create([
             'sales_number' => 'SALE-123',
             'brand' => 'Brand A',
@@ -96,7 +98,7 @@ class TransactionControllerTest extends TestCase
     public function test_sync_to_google_batches_transactions()
     {
         $user = $this->createUser();
-        
+
         Transaction::factory(2)->create();
 
         // Mock GoogleSyncService
@@ -126,7 +128,7 @@ class TransactionControllerTest extends TestCase
         Transaction::factory()->create();
 
         // Using Mockery to mock Excel Facade
-        \Maatwebsite\Excel\Facades\Excel::shouldReceive('download')->once()->andReturn(new \Illuminate\Http\Response('excel-data'));
+        Excel::shouldReceive('download')->once()->andReturn(new Response('excel-data'));
 
         $response = $this->actingAs($user)->get('/export-transactions');
 
@@ -143,7 +145,7 @@ class TransactionControllerTest extends TestCase
         $mockSync->shouldReceive('syncBatch')->once()->andReturn(true);
         $this->app->instance(GoogleSyncService::class, $mockSync);
 
-        \Maatwebsite\Excel\Facades\Excel::shouldReceive('import')->once()->andReturn(true);
+        Excel::shouldReceive('import')->once()->andReturn(true);
 
         $response = $this->actingAs($user)->get('/import-transactions');
 
@@ -155,7 +157,7 @@ class TransactionControllerTest extends TestCase
     {
         $user = $this->createUser();
 
-        \Maatwebsite\Excel\Facades\Excel::shouldReceive('import')->andThrow(new \Exception('Import error'));
+        Excel::shouldReceive('import')->andThrow(new \Exception('Import error'));
 
         $response = $this->actingAs($user)->get('/import-transactions');
 

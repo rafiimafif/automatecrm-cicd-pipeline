@@ -22,15 +22,15 @@ class ServiceExpirationReminderTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->addDays(30)->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
         $this->artisan('auto:ServiceExpirationReminder')->assertExitCode(0);
@@ -48,15 +48,15 @@ class ServiceExpirationReminderTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->addDays(15)->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
         $this->artisan('auto:ServiceExpirationReminder')->assertExitCode(0);
@@ -74,15 +74,15 @@ class ServiceExpirationReminderTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->addDays(5)->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
         $this->artisan('auto:ServiceExpirationReminder')->assertExitCode(0);
@@ -100,15 +100,15 @@ class ServiceExpirationReminderTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->format('Y-m-d'),
-            'reminder' => 1
+            'reminder' => 1,
         ]);
 
         $this->artisan('auto:ServiceExpirationReminder')->assertExitCode(0);
@@ -126,15 +126,15 @@ class ServiceExpirationReminderTest extends TestCase
         $service = Service::create([
             'name' => 'Web Hosting',
             'base_price' => 100,
-            'description' => 'Hosting'
+            'description' => 'Hosting',
         ]);
-        
+
         ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->addDays(30)->format('Y-m-d'),
-            'reminder' => 0 // disabled
+            'reminder' => 0, // disabled
         ]);
 
         $this->artisan('auto:ServiceExpirationReminder')->assertExitCode(0);

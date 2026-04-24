@@ -14,14 +14,14 @@ class CustomersImportExportTest extends TestCase
 
     public function test_customers_import()
     {
-        $import = new CustomersImport();
+        $import = new CustomersImport;
         $model = $import->model([
             'John',
             'Doe',
             'Acme',
             '123 St',
             '12345',
-            'john@acme.com'
+            'john@acme.com',
         ]);
 
         $this->assertInstanceOf(Customer::class, $model);
@@ -35,12 +35,12 @@ class CustomersImportExportTest extends TestCase
         Customer::factory()->create([
             'fname' => 'John',
             'lname' => 'Doe',
-            'email' => 'john@acme.com'
+            'email' => 'john@acme.com',
         ]);
 
-        $export = new CustomersExport();
+        $export = new CustomersExport;
         $collection = $export->collection();
-        
+
         $this->assertCount(1, $collection);
         $this->assertEquals('John', $collection->first()->fname);
 

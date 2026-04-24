@@ -5,8 +5,8 @@ namespace Tests\Unit;
 use App\Exports\TransactionsExport;
 use App\Models\Transaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Tests\TestCase;
 
 class TransactionsExportTest extends TestCase
 {
@@ -17,14 +17,14 @@ class TransactionsExportTest extends TestCase
         Transaction::factory()->create([
             'sales_number' => 'EXP-001',
             'brand' => 'ExportBrand',
-            'payment_amount' => 1000
+            'payment_amount' => 1000,
         ]);
 
-        $export = new TransactionsExport();
+        $export = new TransactionsExport;
         $collection = $export->collection();
 
         $this->assertCount(1, $collection);
-        
+
         $first = $collection->first();
         $this->assertArrayHasKey('Sales Number', $first);
         $this->assertEquals('EXP-001', $first['Sales Number']);
@@ -34,15 +34,15 @@ class TransactionsExportTest extends TestCase
 
     public function test_transactions_export_headings_and_styles()
     {
-        $export = new TransactionsExport();
+        $export = new TransactionsExport;
         $headings = $export->headings();
-        
+
         $this->assertContains('Sales Number', $headings);
         $this->assertContains('Payment Amount', $headings);
-        
-        // Cannot easily mock Worksheet without full PhpSpreadsheet setup, 
+
+        // Cannot easily mock Worksheet without full PhpSpreadsheet setup,
         // but we can pass a dummy or assert it returns an array
-        $styles = $export->styles(new Worksheet());
+        $styles = $export->styles(new Worksheet);
         $this->assertIsArray($styles);
         $this->assertArrayHasKey(1, $styles);
         $this->assertArrayHasKey('font', $styles[1]);

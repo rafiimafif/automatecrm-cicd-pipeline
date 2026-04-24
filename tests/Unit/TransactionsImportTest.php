@@ -2,12 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Imports\TransactionsImport;
 use App\Imports\PosTransactionsSheet;
-use App\Models\Transaction;
+use App\Imports\TransactionsImport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Tests\TestCase;
 
 class TransactionsImportTest extends TestCase
 {
@@ -15,17 +14,17 @@ class TransactionsImportTest extends TestCase
 
     public function test_import_sheets()
     {
-        $import = new TransactionsImport();
+        $import = new TransactionsImport;
         $sheets = $import->sheets();
-        
+
         $this->assertArrayHasKey('POS TRX', $sheets);
         $this->assertInstanceOf(PosTransactionsSheet::class, $sheets['POS TRX']);
     }
 
     public function test_pos_transaction_sheet_model_processing()
     {
-        $sheet = new PosTransactionsSheet();
-        
+        $sheet = new PosTransactionsSheet;
+
         // Empty row should return null
         $this->assertNull($sheet->model([]));
 
@@ -45,7 +44,7 @@ class TransactionsImportTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'sales_number' => 'SALE-TEST-1',
             'brand' => 'TestBrand',
-            'payment_amount' => 500
+            'payment_amount' => 500,
         ]);
 
         $this->assertEquals(500, $sheet->batchSize());
