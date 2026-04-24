@@ -56,7 +56,9 @@
                         <a class="nav-link" data-toggle="tab" role="tab" href="#services"
                             aria-controls="services">Services</a>
                         <a class="nav-link" data-toggle="tab" role="tab" href="#payments"
-                            aria-controls="services">Payments</a>
+                            aria-controls="payments">Payments</a>
+                        <a class="nav-link" data-toggle="tab" role="tab" href="#notes"
+                            aria-controls="notes">Notes & Timeline</a>
                     </nav>
                     <hr class="mt-0 mb-4">
                     <div class="tab-content" id="myTabContent">
@@ -65,68 +67,92 @@
                             <div class="card mb-4">
                                 <div class="card-header">Account Details</div>
                                 <div class="card-body">
-                                    <form id="single_customer_form">
-                                        {{ csrf_field() }}
-                                        <!-- Form Row-->
+                                    <form id="single_customer_form" method="POST" action="{{ route('customer.update', $cus->id) }}">
+                                        @csrf
+                                        @method('PUT')
                                         <div class="row gx-3 mb-3">
-                                            <!-- Form Group (first name)-->
-                                            <div class="col-md-12">
-                                                <label class="small mb-1" for="inputFirstName">First
-                                                    name</label>
-                                                <input class="form-control" id="inputFirstName" type="text"
-                                                    placeholder="Enter your first name" value="{{ $cus->fname }}">
+                                            <div class="col-md-6">
+                                                <label class="small mb-1" for="inputFirstName">First name</label>
+                                                <input class="form-control" id="inputFirstName" name="fname" type="text"
+                                                    placeholder="Enter first name" value="{{ $cus->fname }}">
                                             </div>
-                                            <!-- Form Group (last name)-->
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <label class="small mb-1" for="inputLastName">Last name</label>
-                                                <input class="form-control" id="inputLastName" type="text"
-                                                    placeholder="Enter your last name" value="{{ $cus->lname }}">
+                                                <input class="form-control" id="inputLastName" name="lname" type="text"
+                                                    placeholder="Enter last name" value="{{ $cus->lname }}">
                                             </div>
                                         </div>
-                                        <!-- Form Row        -->
                                         <div class="row gx-3 mb-3">
-                                            <!-- Form Group (organization name)-->
-                                            <div class="col-md-12">
-                                                <label class="small mb-1" for="inputOrgName">Company
-                                                    name</label>
-                                                <input class="form-control" id="inputOrgName" type="text"
-                                                    placeholder="Enter your organization name"
-                                                    value="{{ $cus->company }}">
+                                            <div class="col-md-6">
+                                                <label class="small mb-1" for="inputOrgName">Company</label>
+                                                <input class="form-control" id="inputOrgName" name="company" type="text"
+                                                    placeholder="Company name" value="{{ $cus->company }}">
                                             </div>
-                                            <!-- Form Group (location)-->
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <label class="small mb-1" for="inputLocation">Address</label>
-                                                <input class="form-control" id="inputLocation" type="text"
-                                                    placeholder="Enter your location" value="{{ $cus->address }}">
+                                                <input class="form-control" id="inputLocation" name="address" type="text"
+                                                    placeholder="Address" value="{{ $cus->address }}">
                                             </div>
                                         </div>
-
-                                        <!-- Form Row-->
                                         <div class="row gx-3 mb-3">
-                                            <!-- Form Group (phone number)-->
-                                            <div class="col-md-12">
-                                                <label class="small mb-1" for="inputPhone">Phone
-                                                    number</label>
-                                                <input class="form-control" id="inputPhone" type="tel"
-                                                    placeholder="Enter your phone number" value="{{ $cus->phone }}">
+                                            <div class="col-md-6">
+                                                <label class="small mb-1" for="inputPhone">Phone</label>
+                                                <input class="form-control" id="inputPhone" name="phone" type="tel"
+                                                    placeholder="Phone number" value="{{ $cus->phone }}">
                                             </div>
-                                            <!-- Form Group (email)-->
-                                            <div class="col-md-12">
-                                                <label class="small mb-1" for="inputEmailAddress">Email
-                                                    address</label>
-                                                <input class="form-control" id="inputEmailAddress" type="email"
-                                                    placeholder="Enter your email address"
-                                                    value="{{ $cus->email }}">
+                                            <div class="col-md-6">
+                                                <label class="small mb-1" for="inputEmailAddress">Email</label>
+                                                <input class="form-control" id="inputEmailAddress" name="email" type="email"
+                                                    placeholder="Email address" value="{{ $cus->email }}">
                                             </div>
                                         </div>
-                                        <!-- Save changes button-->
-                                        <button class="btn btn-primary" type="button">Save changes</button>
-                                        <!-- Add Service button-->
-                                        <button class="btn btn-primary" type="button" data-toggle="modal"
-                                            data-target="#addServiceModal">Add Service</button>
-                                        <!-- Send Message button-->
-                                        <button class="btn btn-primary" type="button" data-toggle="modal"
-                                            data-target="#messageModal">Send Message</button>
+                                        <button class="btn btn-primary" type="submit"><i class="fas fa-save mr-1"></i>Save Changes</button>
+                                        <button class="btn btn-info" type="button" data-toggle="modal" data-target="#addServiceModal"><i class="fas fa-plus mr-1"></i>Add Service</button>
+                                        <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#messageModal"><i class="fas fa-envelope mr-1"></i>Send Message</button>
+                                    </form>
+                                    <hr>
+                                    <form action="{{ route('customer.delete', $cus->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this customer?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash mr-1"></i>Delete Customer</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Tags Card -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Tags</span>
+                                </div>
+                                <div class="card-body">
+                                    @if(isset($customerTags))
+                                    <div class="mb-3">
+                                        @foreach ($customerTags as $tag)
+                                            <span class="badge mr-1 mb-1" style="background-color: {{ $tag->color }}; color: #fff; font-size: 0.8rem; padding: 5px 10px;">
+                                                {{ $tag->name }}
+                                                <form action="{{ route('tags.detach') }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="tag_id" value="{{ $tag->id }}">
+                                                    <input type="hidden" name="taggable_type" value="App\Models\Customer">
+                                                    <input type="hidden" name="taggable_id" value="{{ $cus->id }}">
+                                                    <button type="submit" class="btn btn-link p-0 text-white" style="font-size:0.7rem;">&times;</button>
+                                                </form>
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    <form action="{{ route('tags.attach') }}" method="POST" class="form-inline">
+                                        @csrf
+                                        <input type="hidden" name="taggable_type" value="App\Models\Customer">
+                                        <input type="hidden" name="taggable_id" value="{{ $cus->id }}">
+                                        <select class="form-control form-control-sm mr-2" name="tag_id">
+                                            @if(isset($allTags))
+                                            @foreach ($allTags as $tag)
+                                                <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i>Add Tag</button>
                                     </form>
                                 </div>
                             </div>
@@ -291,6 +317,83 @@
                                             class="btn btn-primary" type="button" data-toggle="modal"
                                             data-target="#addPaymentModal">Add Payment</button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes & Timeline Tab -->
+                        <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-stream mr-1"></i>Interaction Timeline</span>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Add Note Form -->
+                                    <form method="POST" action="{{ route('notes.store') }}" class="mb-4">
+                                        @csrf
+                                        <input type="hidden" name="notable_type" value="App\Models\Customer">
+                                        <input type="hidden" name="notable_id" value="{{ $cus->id }}">
+                                        <div class="row">
+                                            <div class="col-md-3 mb-2">
+                                                <select class="form-control" name="type">
+                                                    <option value="note">📝 Note</option>
+                                                    <option value="call">📞 Call</option>
+                                                    <option value="email">📧 Email</option>
+                                                    <option value="meeting">🤝 Meeting</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-7 mb-2">
+                                                <input type="text" class="form-control" name="content" placeholder="Add a note about this interaction..." required>
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-plus mr-1"></i>Add</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <!-- Timeline -->
+                                    @if(isset($notes) && $notes->count() > 0)
+                                        <div class="timeline">
+                                            @foreach ($notes as $note)
+                                                <div class="d-flex mb-3 pb-3 border-bottom">
+                                                    <div class="mr-3">
+                                                        @switch($note->type)
+                                                            @case('call')
+                                                                <span class="badge badge-info" style="font-size:1.1rem;">📞</span>
+                                                                @break
+                                                            @case('email')
+                                                                <span class="badge badge-warning" style="font-size:1.1rem;">📧</span>
+                                                                @break
+                                                            @case('meeting')
+                                                                <span class="badge badge-success" style="font-size:1.1rem;">🤝</span>
+                                                                @break
+                                                            @default
+                                                                <span class="badge badge-secondary" style="font-size:1.1rem;">📝</span>
+                                                        @endswitch
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <p class="mb-1">{{ $note->content }}</p>
+                                                        <small class="text-muted">
+                                                            {{ ucfirst($note->type) }} · {{ $note->created_at->diffForHumans() }}
+                                                            @if($note->user) · by {{ $note->user->name }} @endif
+                                                        </small>
+                                                    </div>
+                                                    <div>
+                                                        <form action="{{ route('notes.destroy', $note->id) }}" method="POST" onsubmit="return confirm('Delete this note?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-link text-danger btn-sm p-0"><i class="fas fa-times"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="text-center text-gray-500 py-4">
+                                            <i class="fas fa-stream fa-2x mb-2 text-gray-300"></i>
+                                            <p>No interactions recorded yet. Add your first note above.</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

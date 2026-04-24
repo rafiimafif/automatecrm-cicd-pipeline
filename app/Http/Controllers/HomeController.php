@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Deal;
+use App\Models\DealStage;
+use App\Models\ServicetoCustomer;
+use App\Models\Task;
 use App\Models\Transaction;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -75,9 +80,52 @@ class HomeController extends Controller
             ->take(10)
             ->get();
 
+        // ── CRM KPI Metrics ──
+
+        // Customer metrics
+        $totalCustomers = Customer::count();
+        $newCustomersThisMonth = Customer::where('created_at', '>=', now()->startOfMonth())->count();
+
+        // Deal pipeline metrics
+        $openDeals = Deal::where('status', 'open')->count();
+        $openDealsValue = Deal::where('status', 'open')->sum('value');
+        $wonDealsThisMonth = Deal::where('status', 'won')
+            ->where('updated_at', '>=', now()->startOfMonth())->count();
+        $wonDealsValueThisMonth = Deal::where('status', 'won')
+            ->where('updated_at', '>=', now()->startOfMonth())->sum('value');
+
+        // Pipeline stages for mini funnel
+        $pipelineStages = DealStage::withCount(['deals' => function ($q) {
+            $q->where('status', 'open');
+        }])
+        ->withSum(['deals' => function ($q) {
+            $q->where('status', 'open');
+        }], 'value')
+        ->orderBy('order')
+        ->get();
+
+        // Task metrics
+        $overdueTasks = Task::overdue()->count();
+        $pendingTasks = Task::pending()->count();
+
+        // Upcoming renewals (services expiring in next 30 days)
+        $upcomingRenewals = ServicetoCustomer::where('expiration', '>=', now())
+            ->where('expiration', '<=', now()->addDays(30))
+            ->count();
+
+        // Recent activity
+        $recentActivity = DB::table('activity_logs')
+            ->orderByDesc('created_at')
+            ->take(10)
+            ->get();
+
         return view('welcome', compact(
             'transactions', 'paymentMethods', 'topBrand', 'totalPayment', 'totalMdr', 'totalNett', 'transactionCount', 'avgTransaction',
-            'topPaymentByAmount', 'brandBreakdown', 'dailyTrend', 'cityBreakdown'
+            'topPaymentByAmount', 'brandBreakdown', 'dailyTrend', 'cityBreakdown',
+            // CRM KPIs
+            'totalCustomers', 'newCustomersThisMonth',
+            'openDeals', 'openDealsValue', 'wonDealsThisMonth', 'wonDealsValueThisMonth',
+            'pipelineStages', 'overdueTasks', 'pendingTasks', 'upcomingRenewals', 'recentActivity'
         ));
     }
 

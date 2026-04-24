@@ -31,6 +31,9 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Sales Dashboard</h1>
                         <div class="btn-group" role="group">
+                            <a href="{{ route('customers.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-outline-primary shadow-sm"><i class="fas fa-users fa-sm mr-1"></i>Customers</a>
+                            <a href="{{ route('deals.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-outline-info shadow-sm"><i class="fas fa-handshake fa-sm mr-1"></i>Deals</a>
+                            <a href="{{ route('tasks.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-outline-warning shadow-sm"><i class="fas fa-tasks fa-sm mr-1"></i>Tasks</a>
                             <a href="{{ route('transactions.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add Transaction</a>
                             <a href="{{ route('transactions.import') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-excel fa-sm text-white-50"></i> Re-Import Dataset</a>
                         </div>
@@ -185,6 +188,119 @@
                                             <i class="fas fa-map-marker-alt fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Row 3: CRM Metrics -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Customers</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ number_format($totalCustomers) }}</div>
+                                            <div class="text-xs text-gray-500 mt-1">+{{ $newCustomersThisMonth }} this month</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Open Deals</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $openDeals }}</div>
+                                            <div class="text-xs text-gray-500 mt-1">Rp {{ number_format($openDealsValue, 0) }} pipeline</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-handshake fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Overdue Tasks</div>
+                                            <div class="h5 mb-0 font-weight-bold {{ $overdueTasks > 0 ? 'text-danger' : 'text-gray-800' }}">{{ $overdueTasks }}</div>
+                                            <div class="text-xs text-gray-500 mt-1">{{ $pendingTasks }} pending</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-tasks fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Expiring Soon</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $upcomingRenewals }}</div>
+                                            <div class="text-xs text-gray-500 mt-1">services in 30 days</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Mini Funnel + Activity Feed -->
+                    <div class="row mb-4">
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary">Pipeline Stages</h6>
+                                    <a href="{{ route('deals.index') }}" class="btn btn-sm btn-link">View Pipeline →</a>
+                                </div>
+                                <div class="card-body">
+                                    @foreach ($pipelineStages as $stage)
+                                        @if($stage->name !== 'Closed Lost')
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge mr-2" style="background-color: {{ $stage->color }}; color: #fff; width: 10px; height: 10px; border-radius: 50%; padding: 0;">&nbsp;</span>
+                                                <span>{{ $stage->name }}</span>
+                                            </div>
+                                            <div>
+                                                <span class="badge badge-light mr-1">{{ $stage->deals_count }} deals</span>
+                                                <span class="text-muted small">Rp {{ number_format($stage->deals_sum_value ?? 0, 0) }}</span>
+                                            </div>
+                                        </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
+                                    <a href="{{ route('activity.log') }}" class="btn btn-sm btn-link">View All →</a>
+                                </div>
+                                <div class="card-body" style="max-height: 250px; overflow-y: auto;">
+                                    @forelse ($recentActivity as $activity)
+                                        <div class="d-flex align-items-start mb-2 pb-2 border-bottom">
+                                            <i class="fas fa-circle fa-xs text-primary mr-2 mt-1"></i>
+                                            <div>
+                                                <small class="font-weight-bold">{{ $activity->action }}</small>
+                                                <small class="text-muted d-block">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</small>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <p class="text-center text-gray-500 mb-0">No recent activity</p>
+                                    @endforelse
                                 </div>
                             </div>
                         </div>

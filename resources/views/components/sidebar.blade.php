@@ -11,7 +11,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
         <a class="nav-link" href="/">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
@@ -20,16 +20,40 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
+        CRM
+    </div>
+
+    <li class="nav-item {{ request()->is('customers*') || request()->is('customer_edit*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('customers.index') }}">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Customers</span></a>
+    </li>
+
+    <li class="nav-item {{ request()->is('deals*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('deals.index') }}">
+            <i class="fas fa-fw fa-handshake"></i>
+            <span>Deals Pipeline</span></a>
+    </li>
+
+    <li class="nav-item {{ request()->is('tasks*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('tasks.index') }}">
+            <i class="fas fa-fw fa-tasks"></i>
+            <span>Tasks</span></a>
+    </li>
+
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
         Store Operations
     </div>
 
-    <li class="nav-item">
+    <li class="nav-item {{ request()->is('transactions') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transactions.index') }}">
             <i class="fas fa-fw fa-receipt"></i>
             <span>All Transactions</span></a>
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item {{ request()->is('import-transactions') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transactions.import') }}">
             <i class="fas fa-fw fa-file-excel"></i>
             <span>Re-Import Dataset</span></a>
@@ -37,24 +61,39 @@
 
     <hr class="sidebar-divider">
 
-    <!-- Outdated Components below this are commented out, but retained for reference -->
-    <!--
     <div class="sidebar-heading">
-        Interface
+        Management
     </div>
 
-    <li class="nav-item active">
+    <li class="nav-item {{ request()->is('services') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('services.index') }}">
+            <i class="fas fa-fw fa-cogs"></i>
+            <span>Services</span></a>
+    </li>
+
+    <li class="nav-item {{ request()->is('payments') ? 'active' : '' }}">
         <a class="nav-link" href="/payments">
             <i class="fas fa-fw fa-credit-card"></i>
-            <span>Show Payments</span></a>
+            <span>Payments</span></a>
     </li>
-    <li class="nav-item active">
-        <a class="nav-link" href="/tools">
-            <i class="fas fa-fw fa-table"></i>
+
+    <li class="nav-item {{ request()->is('tags') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('tags.index') }}">
+            <i class="fas fa-fw fa-tags"></i>
+            <span>Tags</span></a>
+    </li>
+
+    <li class="nav-item {{ request()->is('tools') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('tools.show') }}">
+            <i class="fas fa-fw fa-wrench"></i>
             <span>Tools</span></a>
     </li>
 
-    -->
+    <li class="nav-item {{ request()->is('activity-log') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('activity.log') }}">
+            <i class="fas fa-fw fa-history"></i>
+            <span>Activity Log</span></a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

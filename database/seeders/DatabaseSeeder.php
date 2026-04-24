@@ -36,5 +36,7 @@ class DatabaseSeeder extends Seeder
         }
         
         echo "[seeder] Seeded admin user and default services.\n";
+
+        $this->call(DealStageSeeder::class);
     }
 }
