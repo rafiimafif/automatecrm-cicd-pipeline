@@ -150,4 +150,16 @@ class TransactionControllerTest extends TestCase
         $response->assertRedirect(route('transactions.index'));
         $response->assertSessionHas('success');
     }
+
+    public function test_import_fails_on_exception()
+    {
+        $user = $this->createUser();
+
+        \Maatwebsite\Excel\Facades\Excel::shouldReceive('import')->andThrow(new \Exception('Import error'));
+
+        $response = $this->actingAs($user)->get('/import-transactions');
+
+        $response->assertRedirect(route('transactions.index'));
+        $response->assertSessionHas('error');
+    }
 }
