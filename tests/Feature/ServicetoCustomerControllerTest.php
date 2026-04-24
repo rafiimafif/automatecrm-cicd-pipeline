@@ -122,7 +122,6 @@ class ServicetoCustomerControllerTest extends TestCase
             'reminder' => 1
         ]);
 
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($user)->post('/service/' . $stc->id . '/renew', [
             'service_id' => $stc->id,
             'new_price' => 200,

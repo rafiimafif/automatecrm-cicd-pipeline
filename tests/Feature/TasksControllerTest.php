@@ -35,7 +35,6 @@ class TasksControllerTest extends TestCase
             'assigned_to' => $user->id
         ]);
 
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($user)->get('/tasks');
 
         $response->assertStatus(200);

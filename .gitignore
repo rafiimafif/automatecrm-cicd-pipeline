@@ -16,3 +16,15 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+coverage*.txt
+coverage*.xml
+*_coverage*.txt
+*_report*.txt
+*_dump*.txt
+*_output*.txt
+*_utf8.txt
+final_*.txt
+full_*.txt
+test_error.txt
+test_output.txt
+error_dump.txt

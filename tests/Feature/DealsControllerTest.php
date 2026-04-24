@@ -81,7 +81,6 @@ class DealsControllerTest extends TestCase
             'assigned_to' => $user->id
         ]);
 
-        $this->withoutExceptionHandling();
         $response = $this->actingAs($user)->get('/deals/' . $deal->id);
 
         $response->assertStatus(200);
