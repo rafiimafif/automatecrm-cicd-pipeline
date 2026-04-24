@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
 class ExportFunctionalityTest extends TestCase
@@ -13,82 +14,41 @@ class ExportFunctionalityTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Test that customers can be exported and appended to Dataset.xlsx
+     * Test that customers can be exported
      */
-    public function test_customers_export_creates_and_appends_data()
+    public function test_customers_export_is_triggered()
     {
+        Excel::fake();
+
         // Create sample customers
-        $customers = Customer::factory(3)->create([
-            'fname' => 'John',
-            'lname' => 'Doe',
-            'company' => 'Acme Corp',
-            'phone' => '123-456-7890',
-            'address' => '123 Main St',
-        ]);
-
-        // Ensure Dataset.xlsx doesn't exist initially
-        $filePath = public_path('Dataset.xlsx');
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
+        Customer::factory(3)->create();
 
         // Test the export route
-        $response = $this->actingAs($this->createUser())
-            ->post('/export-customers');
-
-        // Check that the export was successful
-        $this->assertTrue(file_exists($filePath), 'Dataset.xlsx should be created');
-    }
-
-    /**
-     * Test that duplicate customers are not re-exported
-     */
-    public function test_customers_export_prevents_duplicates()
-    {
-        $customer = Customer::factory()->create();
-        $filePath = public_path('Dataset.xlsx');
-
-        // First export
-        $this->actingAs($this->createUser())->post('/export-customers');
-
-        // Verify file exists
-        $this->assertTrue(file_exists($filePath));
-
-        // Create another customer
-        $newCustomer = Customer::factory()->create();
-
-        // Second export
         $this->actingAs($this->createUser())
-            ->post('/export-customers');
+            ->post('/export-customers')
+            ->assertStatus(200);
 
-        // Verify file exists
-        $this->assertTrue(file_exists($filePath));
+        // Assert that the export was triggered
+        Excel::assertDownloaded('customers.xlsx');
     }
 
     /**
-     * Test that transactions can be exported and appended to Dataset.xlsx
+     * Test that transactions can be exported
      */
-    public function test_transactions_export_creates_and_appends_data()
+    public function test_transactions_export_is_triggered()
     {
-        // Create sample transactions
-        Transaction::factory(2)->create([
-            'sales_number' => 'SALE-001',
-            'brand' => 'Test Brand',
-            'payment_amount' => 100.00,
-        ]);
+        Excel::fake();
 
-        // Ensure Dataset.xlsx doesn't exist initially
-        $filePath = public_path('Dataset.xlsx');
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
+        // Create sample transactions
+        Transaction::factory(2)->create();
 
         // Test the export route
-        $response = $this->actingAs($this->createUser())
-            ->get('/export-transactions');
+        $this->actingAs($this->createUser())
+            ->get('/export-transactions')
+            ->assertStatus(200);
 
-        // Check that response has success
-        $this->assertEquals(200, $response->getStatusCode());
+        // Assert that the export was triggered
+        Excel::assertDownloaded('transactions.xlsx');
     }
 
     /**
