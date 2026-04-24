@@ -10,11 +10,11 @@ class AppendOnlyExportService
     /**
      * Append new records to existing Excel file without duplicates
      *
-     * @param string $filePath Path to the Excel file
-     * @param array $existingRecords Array of existing record identifiers (key => value pairs)
-     * @param array $newRecords Array of new records to append
-     * @param string $startColumn Starting column (e.g., 'A', 'AE')
-     * @param array $headers Column headers for new data section
+     * @param  string  $filePath  Path to the Excel file
+     * @param  array  $existingRecords  Array of existing record identifiers (key => value pairs)
+     * @param  array  $newRecords  Array of new records to append
+     * @param  string  $startColumn  Starting column (e.g., 'A', 'AE')
+     * @param  array  $headers  Column headers for new data section
      * @return array ['success' => true|false, 'newCount' => int, 'message' => string]
      */
     public static function appendRecords(
@@ -29,12 +29,12 @@ class AppendOnlyExportService
 
         try {
             // Create file if it doesn't exist
-            if (!file_exists($filePath)) {
+            if (! file_exists($filePath)) {
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
 
                 // Add headers if provided
-                if (!empty($headers)) {
+                if (! empty($headers)) {
                     $columnIndex = 0;
                     foreach ($headers as $header) {
                         $sheet->setCellValueByColumnAndRow($columnIndex + 1, 1, $header);
@@ -75,7 +75,7 @@ class AppendOnlyExportService
             }
 
             // Save to temp file first
-            $tempPath = storage_path('app/Dataset_temp_' . time() . '.xlsx');
+            $tempPath = storage_path('app/Dataset_temp_'.time().'.xlsx');
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $writer->save($tempPath);
 
@@ -98,7 +98,7 @@ class AppendOnlyExportService
             return [
                 'success' => false,
                 'newCount' => 0,
-                'message' => 'Export failed: ' . class_basename($e) . ' — ' . substr($e->getMessage(), 0, 150),
+                'message' => 'Export failed: '.class_basename($e).' — '.substr($e->getMessage(), 0, 150),
             ];
         }
     }
@@ -112,6 +112,7 @@ class AppendOnlyExportService
         for ($i = 0; $i < strlen($letter); $i++) {
             $index = $index * 26 + (ord($letter[$i]) - ord('A') + 1);
         }
+
         return $index - 1;
     }
 }

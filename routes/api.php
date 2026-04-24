@@ -37,7 +37,7 @@ Route::get('/health', function () {
 Route::get('/transactions', function () {
     return Transaction::orderBy('id', 'asc')
         ->get()
-        ->map(fn($t, $i) => [
+        ->map(fn ($t, $i) => [
             'No' => $i + 1,
             'Sales Number' => $t->sales_number,
             'Bill Number' => $t->bill_number,

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\Deal;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +29,7 @@ class TasksController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%'.$request->search.'%');
         }
 
         $tasks = $query->orderByRaw("FIELD(priority, 'urgent', 'high', 'medium', 'low')")

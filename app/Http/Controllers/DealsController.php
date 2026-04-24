@@ -23,7 +23,7 @@ class DealsController extends Controller
                 $q->where('status', 'open')->with(['customer', 'assignee']);
 
                 if ($request->filled('search')) {
-                    $q->where('title', 'like', '%' . $request->search . '%');
+                    $q->where('title', 'like', '%'.$request->search.'%');
                 }
             }])
             ->get();
@@ -68,7 +68,7 @@ class DealsController extends Controller
 
         $deal = Deal::create($validated);
 
-        return redirect()->route('deals.index')->with('success', 'Deal created: ' . $deal->title);
+        return redirect()->route('deals.index')->with('success', 'Deal created: '.$deal->title);
     }
 
     public function show(Deal $deal)

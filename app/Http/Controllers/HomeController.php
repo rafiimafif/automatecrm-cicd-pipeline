@@ -68,10 +68,10 @@ class HomeController extends Controller
             DB::raw('count(*) as count'),
             DB::raw('SUM(payment_amount) as amount')
         )
-        ->where('sales_date_in', '>=', now()->subDays(30))
-        ->groupBy(DB::raw('DATE(sales_date_in)'))
-        ->orderBy('date')
-        ->get();
+            ->where('sales_date_in', '>=', now()->subDays(30))
+            ->groupBy(DB::raw('DATE(sales_date_in)'))
+            ->orderBy('date')
+            ->get();
 
         // City breakdown
         $cityBreakdown = Transaction::select('city', DB::raw('count(*) as total'), DB::raw('SUM(payment_amount) as amount'))
@@ -98,11 +98,11 @@ class HomeController extends Controller
         $pipelineStages = DealStage::withCount(['deals' => function ($q) {
             $q->where('status', 'open');
         }])
-        ->withSum(['deals' => function ($q) {
-            $q->where('status', 'open');
-        }], 'value')
-        ->orderBy('order')
-        ->get();
+            ->withSum(['deals' => function ($q) {
+                $q->where('status', 'open');
+            }], 'value')
+            ->orderBy('order')
+            ->get();
 
         // Task metrics
         $overdueTasks = Task::overdue()->count();

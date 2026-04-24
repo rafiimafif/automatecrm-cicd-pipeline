@@ -137,7 +137,7 @@ class CustomersController extends Controller
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
             'company' => 'nullable|string|max:255',
-            'email' => 'required|email|unique:customers,email,' . $customer->id,
+            'email' => 'required|email|unique:customers,email,'.$customer->id,
             'phone' => 'nullable|string|max:50',
             'address' => 'nullable|string|max:500',
         ]);

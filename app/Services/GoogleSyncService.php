@@ -14,9 +14,10 @@ class GoogleSyncService
     public function syncOne(Transaction $transaction)
     {
         $url = env('GOOGLE_SHEET_WEB_APP_URL');
-        
-        if (!$url) {
+
+        if (! $url) {
             Log::warning('Google Sheet Web App URL not configured.');
+
             return false;
         }
 
@@ -29,18 +30,19 @@ class GoogleSyncService
             // and use the same object structure as syncBatch for consistency.
             $response = Http::timeout(60)->post($url, [
                 'clear' => false,
-                'rows'  => [$row]
+                'rows' => [$row],
             ]);
-            
+
             $isSuccess = $response->successful() && $response->body() === 'Success';
-            
-            if (!$isSuccess) {
-                Log::error('Google Sheet Real-Time Sync Failed. Response: ' . $response->body());
+
+            if (! $isSuccess) {
+                Log::error('Google Sheet Real-Time Sync Failed. Response: '.$response->body());
             }
 
             return $isSuccess;
         } catch (\Exception $e) {
-            Log::error('Google Sheet Sync Error: ' . $e->getMessage());
+            Log::error('Google Sheet Sync Error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -51,8 +53,8 @@ class GoogleSyncService
     public function syncBatch($transactions)
     {
         $url = env('GOOGLE_SHEET_WEB_APP_URL');
-        
-        if (!$url || $transactions->isEmpty()) {
+
+        if (! $url || $transactions->isEmpty()) {
             return false;
         }
 
@@ -72,19 +74,19 @@ class GoogleSyncService
                 // For the very first chunk, we send 'clear' => true to wipe existing spreadsheet data
                 $response = Http::timeout(90)->post($url, [
                     'clear' => $isFirst,
-                    'rows'  => $rows
+                    'rows' => $rows,
                 ]);
-                
-                if (!$response->successful() || $response->body() !== 'Success') {
-                    Log::error('Google Sheet Sync Chunk Error: ' . $response->body());
+
+                if (! $response->successful() || $response->body() !== 'Success') {
+                    Log::error('Google Sheet Sync Chunk Error: '.$response->body());
                     $allSuccess = false;
                     break;
                 }
-                
+
                 // After the first chunk wipes the sheet, subsequent chunks append
                 $isFirst = false;
             } catch (\Exception $e) {
-                Log::error('Google Sheet Batch Sync Error: ' . $e->getMessage());
+                Log::error('Google Sheet Batch Sync Error: '.$e->getMessage());
                 $allSuccess = false;
                 break;
             }
@@ -127,9 +129,9 @@ class GoogleSyncService
             $t->card_number,
             $t->additional_info,
             $t->notes,
-            (float)($t->mdr ?? 0),
-            (float)($t->payment_amount ?? 0),
-            (float)($t->nett_after_mdr ?? 0),
+            (float) ($t->mdr ?? 0),
+            (float) ($t->payment_amount ?? 0),
+            (float) ($t->nett_after_mdr ?? 0),
         ];
     }
 }

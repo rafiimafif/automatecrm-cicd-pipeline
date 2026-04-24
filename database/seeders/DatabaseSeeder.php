@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Customer;
 use App\Models\Service;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -34,7 +33,7 @@ class DatabaseSeeder extends Seeder
         foreach ($services as $serviceName) {
             Service::firstOrCreate(['name' => $serviceName]);
         }
-        
+
         echo "[seeder] Seeded admin user and default services.\n";
 
         $this->call(DealStageSeeder::class);
