@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
 use App\Models\Deal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,7 +16,7 @@ class DealFactory extends Factory
             'title' => $this->faker->sentence(3),
             'value' => $this->faker->numberBetween(100, 10000),
             'status' => 'open',
-            'customer_id' => \App\Models\Customer::factory(),
+            'customer_id' => Customer::factory(),
             'deal_stage_id' => 1,
         ];
     }
