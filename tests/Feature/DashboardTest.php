@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\HomeController;
 use App\Models\Customer;
 use App\Models\Deal;
 use App\Models\DealStage;
@@ -11,6 +12,7 @@ use App\Models\Task;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class DashboardTest extends TestCase
@@ -29,7 +31,7 @@ class DashboardTest extends TestCase
             'brand' => 'Visa',
             'payment_method' => 'Credit Card',
             'sales_date_in' => now(),
-            'city' => 'Jakarta'
+            'city' => 'Jakarta',
         ]);
 
         Customer::factory()->create(['created_at' => now()]);
@@ -38,12 +40,12 @@ class DashboardTest extends TestCase
         Deal::factory()->create([
             'status' => 'open',
             'value' => 5000,
-            'deal_stage_id' => $stage->id
+            'deal_stage_id' => $stage->id,
         ]);
 
         Task::factory()->create([
             'status' => 'pending',
-            'due_date' => now()->subDay()
+            'due_date' => now()->subDay(),
         ]);
 
         $response = $this->actingAs($user)->get('/');
@@ -64,10 +66,10 @@ class DashboardTest extends TestCase
             'brand' => 'Mastercard',
             'payment_method' => 'Debit',
             'sales_date_in' => now(),
-            'city' => 'Surabaya'
+            'city' => 'Surabaya',
         ]);
 
-        $finance = \App\Http\Controllers\HomeController::finance();
+        $finance = HomeController::finance();
         
         $this->assertEquals(2000, $finance[0]);
         $this->assertEquals(20, $finance[1]);
@@ -82,6 +84,6 @@ class DashboardTest extends TestCase
         $response = $this->actingAs($user)->get('/logout');
         
         $response->assertRedirect('login');
-        $this->assertFalse(\Auth::check());
+        $this->assertFalse(Auth::check());
     }
 }

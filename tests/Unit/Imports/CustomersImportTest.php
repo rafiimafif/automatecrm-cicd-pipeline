@@ -19,7 +19,7 @@ class CustomersImportTest extends TestCase
             'john@acme.com', // email
         ];
 
-        $import = new CustomersImport();
+        $import = new CustomersImport;
         $model = $import->model($row);
 
         $this->assertInstanceOf(Customer::class, $model);

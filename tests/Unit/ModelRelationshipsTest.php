@@ -16,7 +16,7 @@ class ModelRelationshipsTest extends TestCase
 
     public function test_service_relationships()
     {
-        $service = Service::create(['name' => 'Web', 'base_price' => 10, 'description' => 'D']);
+        $service = Service::create(['name' => 'Web', 'base_price' => 10, 'description' => 'D',]);
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $service->servicetocustomers());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $service->customer());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class, $service->payments());
@@ -24,14 +24,14 @@ class ModelRelationshipsTest extends TestCase
 
     public function test_tag_relationships()
     {
-        $tag = Tag::create(['name' => 'Urgent']);
+        $tag = Tag::create(['name' => 'Urgent',]);
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphToMany::class, $tag->customers());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphToMany::class, $tag->deals());
     }
 
     public function test_customer_relationships()
     {
-        $customer = new Customer();
+        $customer = new Customer;
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $customer->services());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $customer->payments());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $customer->servicetocustomer());
@@ -43,7 +43,7 @@ class ModelRelationshipsTest extends TestCase
 
     public function test_deal_relationships()
     {
-        $deal = new Deal();
+        $deal = new Deal;
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $deal->customer());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $deal->stage());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $deal->assignee());
@@ -54,7 +54,7 @@ class ModelRelationshipsTest extends TestCase
 
     public function test_task_relationships()
     {
-        $task = new Task();
+        $task = new Task;
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphTo::class, $task->taskable());
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $task->assignee());
     }

@@ -40,7 +40,7 @@ class AppendOnlyExportServiceTest extends TestCase
             [],
             $newRecords,
             'A',
-            $headers
+            $headers,
         );
 
         $this->assertTrue($result['success']);
@@ -70,7 +70,7 @@ class AppendOnlyExportServiceTest extends TestCase
             '/invalid/path/file.xlsx',
             [],
             [['Data']],
-            'A'
+            'A',
         );
 
         $this->assertFalse($result['success']);

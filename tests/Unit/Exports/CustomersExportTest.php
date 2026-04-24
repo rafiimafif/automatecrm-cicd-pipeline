@@ -15,7 +15,7 @@ class CustomersExportTest extends TestCase
     {
         Customer::factory()->count(3)->create();
 
-        $export = new CustomersExport();
+        $export = new CustomersExport;
         $collection = $export->collection();
 
         $this->assertCount(3, $collection);
@@ -24,7 +24,7 @@ class CustomersExportTest extends TestCase
 
     public function test_customers_export_headings()
     {
-        $export = new CustomersExport();
+        $export = new CustomersExport;
         $headings = $export->headings();
 
         $this->assertEquals(['ID', 'Name', 'Email'], $headings);

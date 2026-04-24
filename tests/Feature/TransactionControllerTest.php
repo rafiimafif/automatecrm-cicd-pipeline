@@ -24,7 +24,7 @@ class TransactionControllerTest extends TestCase
         
         Transaction::factory()->create([
             'sales_number' => 'SALE-12345',
-            'brand' => 'Acme Corp'
+            'brand' => 'Acme Corp',
         ]);
 
         $response = $this->actingAs($user)->get('/transactions');
@@ -40,12 +40,12 @@ class TransactionControllerTest extends TestCase
         
         Transaction::factory()->create([
             'sales_number' => 'SALE-123',
-            'brand' => 'Brand A'
+            'brand' => 'Brand A',
         ]);
 
         Transaction::factory()->create([
             'sales_number' => 'SALE-456',
-            'brand' => 'Brand B'
+            'brand' => 'Brand B',
         ]);
 
         $response = $this->actingAs($user)->get('/transactions?search=Brand A');
@@ -89,7 +89,7 @@ class TransactionControllerTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'sales_number' => 'SALE-999',
             'payment_amount' => 1000,
-            'nett_after_mdr' => 990 // 1000 - 10
+            'nett_after_mdr' => 990, // 1000 - 10
         ]);
     }
 
