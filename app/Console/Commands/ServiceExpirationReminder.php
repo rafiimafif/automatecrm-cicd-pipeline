@@ -45,7 +45,8 @@ class ServiceExpirationReminder extends Command
 
         foreach ($services as $s) {
 
-            if ($s->expiration == date('Y-m-d', strtotime('+30 days'))) {
+            $expDate = substr($s->expiration, 0, 10);
+            if ($expDate == \Carbon\Carbon::now()->addDays(30)->format('Y-m-d')) {
                 // var_dump($s);
                 echo '30 days expiration';
                 $data = [
@@ -56,7 +57,7 @@ class ServiceExpirationReminder extends Command
                 ];
                 Mail::to($s->email)->send(new ExpirationReminder($data));
 
-            } elseif ($s->expiration == date('Y-m-d', strtotime('+15 days'))) {
+            } elseif ($expDate == \Carbon\Carbon::now()->addDays(15)->format('Y-m-d')) {
                 echo '15 days expiration';
                 $data = [
                     'email' => $s->email,
@@ -65,7 +66,7 @@ class ServiceExpirationReminder extends Command
                     'expiration' => $s->expiration,
                 ];
                 Mail::to($s->email)->send(new ExpirationReminder($data));
-            } elseif ($s->expiration == date('Y-m-d', strtotime('+5 days'))) {
+            } elseif ($expDate == \Carbon\Carbon::now()->addDays(5)->format('Y-m-d')) {
                 echo '5 days expiration';
                 $data = [
                     'email' => $s->email,
@@ -74,7 +75,7 @@ class ServiceExpirationReminder extends Command
                     'expiration' => $s->expiration,
                 ];
                 Mail::to($s->email)->send(new ExpirationReminder($data));
-            } elseif ($s->expiration == date('Y-m-d')) {
+            } elseif ($expDate == \Carbon\Carbon::now()->format('Y-m-d')) {
                 echo 'today expiration';
                 $data = [
                     'email' => $s->email,

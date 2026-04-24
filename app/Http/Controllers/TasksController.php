@@ -32,7 +32,15 @@ class TasksController extends Controller
             $query->where('title', 'like', '%'.$request->search.'%');
         }
 
-        $tasks = $query->orderByRaw("FIELD(priority, 'urgent', 'high', 'medium', 'low')")
+        $tasks = $query->orderByRaw("
+            CASE priority 
+                WHEN 'urgent' THEN 1 
+                WHEN 'high' THEN 2 
+                WHEN 'medium' THEN 3 
+                WHEN 'low' THEN 4 
+                ELSE 5 
+            END
+        ")
             ->orderBy('due_date')
             ->paginate(20);
 

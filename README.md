@@ -11,9 +11,9 @@
 <h3>automateCRM</h3>
 
 <p>
-  A production-ready Laravel CRM platform with a full DevOps pipeline —<br/>
-  containerized with Docker, automated with Jenkins, quality-gated with SonarCloud,<br/>
-  and infrastructure-provisioned with Terraform on AWS.
+  A production-ready Laravel 10 CRM platform with a dual DevOps pipeline —<br/>
+  automated with GitHub Actions & Jenkins, quality-gated with SonarCloud,<br/>
+  and containerized with Docker for seamless AWS deployment.
 </p>
 
 <a href="https://github.com/rafiimafif/automatecrm-cicd-pipeline/issues">Report Bug</a>
@@ -56,7 +56,7 @@
 
 ## About The Project
 
-automateCRM is a production-ready Customer Relationship Management platform built with **Laravel 9** and **Vue.js 3**. It features a robust sales pipeline, task management system, and deep customer interaction tracking, all wrapped in a high-performance **DevOps pipeline** (GitHub Actions & Jenkins) with automated testing, security scanning, and containerized deployment.
+automateCRM is a production-ready Customer Relationship Management platform built with **Laravel 10** and **Vue.js 3**. It features a robust sales pipeline, task management system, and deep customer interaction tracking, all wrapped in a high-performance **Dual CI/CD Pipeline** (GitHub Actions & Jenkins) with automated testing, security scanning, and containerized deployment.
 
 ### 🚀 Tier 1 CRM Features (Just Added)
 - **Kanban Sales Pipeline**: Manage deals visually with customizable stages and drag-and-drop transitions.
@@ -92,7 +92,7 @@ The system features a custom-engineered **Hybrid POS Data Pipeline** that synchr
 
 | Layer | Technology | Version |
 |---|---|---|
-| **Backend** | Laravel | 9.x |
+| **Backend** | Laravel | 10.x |
 | **Language** | PHP | 8.2 |
 | **Frontend** | Vue.js + Vite | 3.x |
 | **CSS Framework** | Bootstrap | 5.x |
@@ -131,7 +131,8 @@ The system features a custom-engineered **Hybrid POS Data Pipeline** that synchr
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Developer Workstation                       │
 │                                                                 │
-│   git push → GitHub → Jenkins (polls / webhook)                 │
+│   git push → GitHub → GitHub Actions (CI/CD)                    │
+│                     └─→ Jenkins (Self-hosted)                   │
 └─────────────────────────┬───────────────────────────────────────┘
                           │
          ┌────────────────▼────────────────────────────┐
@@ -394,6 +395,17 @@ SonarCloud provides continuous static analysis with every pipeline run:
 `config/`, `database/`, `resources/`, `routes/`, `bootstrap/`, `app/Console/Kernel.php`, `app/Exceptions/Handler.php`, `app/Providers/`
 
 **Quality Gate** — The pipeline `waitForQualityGate` step blocks the build until SonarCloud finishes analysis. If the default Quality Gate fails (e.g. coverage too low, new bugs introduced), the pipeline aborts immediately before deploy.
+
+---
+
+## Security & Reliability
+
+The platform undergoes rigorous security auditing and quality assurance:
+
+- **100% Security Patching**: Successfully resolved 32 security advisories (CVEs) identified in the legacy stack.
+- **Automated Scanning**: Every build triggers `composer audit` and `npm audit` to catch new vulnerabilities instantly.
+- **Unit & Feature Testing**: Modernized test suite with new `CustomerFactory` and `TransactionFactory` for stable, repeatable testing.
+- **Container Hardening**: Multi-stage Docker builds ensure zero development dependencies reach the production environment.
 
 ---
 

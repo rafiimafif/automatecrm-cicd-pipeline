@@ -1,0 +1,106 @@
+PHPUnit 10.5.63 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.2.30 with PCOV 1.0.12
+Configuration: /app/phpunit.xml
+
+...................E............................................30 days expiration2026-05-24. 65 / 99 ( 65%)
+15 days expiration2026-05-24.5 days expiration2026-05-24.today expiration2026-05-24.2026-05-24...............................                                99 / 99 (100%)
+
+Time: 00:37.775, Memory: 56.50 MB
+
+There was 1 error:
+
+1) Tests\Unit\ModelRelationshipsTest::test_service_relationships
+BadMethodCallException: Call to undefined method App\Models\Service::servicetocustomer()
+
+/app/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php:67
+/app/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php:36
+/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php:2335
+/app/tests/Unit/ModelRelationshipsTest.php:20
+
+ERRORS!
+Tests: 99, Assertions: 218, Errors: 1.
+
+
+Code Coverage Report:
+  2026-04-24 12:35:03
+
+ Summary:
+  Classes: 40.43% (19/47)
+  Methods: 69.39% (102/147)
+  Lines:   84.98% (798/939)
+
+App\Console\Commands\ServiceExpirationReminder
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 46/ 46)
+App\Console\Commands\TestEmail
+  Methods:  50.00% ( 1/ 2)   Lines:  25.00% (  1/  4)
+App\Console\Kernel
+  Methods:  50.00% ( 1/ 2)   Lines:  66.67% (  2/  3)
+App\Exceptions\Handler
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  2/  2)
+App\Exports\CustomersExport
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+App\Exports\TransactionsExport
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 53/ 53)
+App\Http\Controllers\ActivityLogController
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  2/  2)
+App\Http\Controllers\Auth\LoginController
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  1/  1)
+App\Http\Controllers\CustomersController
+  Methods:  63.64% ( 7/11)   Lines:  89.89% ( 80/ 89)
+App\Http\Controllers\DealsController
+  Methods:  71.43% ( 5/ 7)   Lines:  96.88% ( 62/ 64)
+App\Http\Controllers\HomeController
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 80/ 80)
+App\Http\Controllers\NotesController
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 12/ 12)
+App\Http\Controllers\PaymentsController
+  Methods:  50.00% ( 1/ 2)   Lines:  81.25% ( 13/ 16)
+App\Http\Controllers\ServicesController
+  Methods:  75.00% ( 6/ 8)   Lines:  88.89% ( 24/ 27)
+App\Http\Controllers\ServicetoCustomerController
+  Methods:  77.78% ( 7/ 9)   Lines:  93.33% ( 70/ 75)
+App\Http\Controllers\TagsController
+  Methods:  83.33% ( 5/ 6)   Lines:  96.88% ( 31/ 32)
+App\Http\Controllers\TasksController
+  Methods:  80.00% ( 4/ 5)   Lines:  97.73% ( 43/ 44)
+App\Http\Controllers\TransactionController
+  Methods:  71.43% ( 5/ 7)   Lines:  90.54% ( 67/ 74)
+App\Http\Middleware\Authenticate
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  2/  2)
+App\Http\Middleware\RedirectIfAuthenticated
+  Methods:   0.00% ( 0/ 1)   Lines:  80.00% (  4/  5)
+App\Imports\CustomersImport
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  8/  8)
+App\Imports\PosTransactionsSheet
+  Methods:  66.67% ( 2/ 3)   Lines:  95.74% ( 45/ 47)
+App\Imports\TransactionsImport
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  3/  3)
+App\Mail\ExpirationReminder
+  Methods:  50.00% ( 1/ 2)   Lines:  33.33% (  1/  3)
+App\Models\Customer
+  Methods:  88.89% ( 8/ 9)   Lines:  92.86% ( 13/ 14)
+App\Models\Deal
+  Methods: 100.00% ( 6/ 6)   Lines: 100.00% (  6/  6)
+App\Models\DealStage
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  1/  1)
+App\Models\Service
+  Methods:  25.00% ( 1/ 4)   Lines:  62.50% (  5/  8)
+App\Models\ServicetoCustomer
+  Methods:  60.00% ( 3/ 5)   Lines:  90.91% ( 20/ 22)
+App\Models\Tag
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% (  6/  6)
+App\Models\Task
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% (  9/  9)
+App\Providers\AppServiceProvider
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  2/  2)
+App\Providers\AuthServiceProvider
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  1/  1)
+App\Providers\EventServiceProvider
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  2/  2)
+App\Providers\RouteServiceProvider
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 11/ 11)
+App\Services\GoogleSyncService
+  Methods:  33.33% ( 1/ 3)   Lines:  84.00% ( 63/ 75)
+App\Services\RenewalService
+  Methods:  50.00% ( 1/ 2)   Lines:  25.00% (  1/  4)

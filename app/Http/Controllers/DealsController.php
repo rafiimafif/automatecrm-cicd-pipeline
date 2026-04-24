@@ -73,11 +73,12 @@ class DealsController extends Controller
 
     public function show(Deal $deal)
     {
-        $deal->load(['customer', 'stage', 'assignee', 'tags', 'notes.user', 'tasks']);
+        $deal->load(['customer', 'stage', 'assignee', 'tags', 'tasks']);
+        $notes = $deal->notes()->with('user')->get();
         $stages = DealStage::orderBy('order')->get();
         $tags = Tag::orderBy('name')->get();
 
-        return view('deals.show', compact('deal', 'stages', 'tags'));
+        return view('deals.show', compact('deal', 'stages', 'tags', 'notes'));
     }
 
     public function update(Request $request, Deal $deal)

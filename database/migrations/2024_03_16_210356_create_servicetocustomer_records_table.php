@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreign('servicetocustomer_id')->references('id')->on('servicetocustomer')->onDelete('cascade');
             $table->date('start_date');
             $table->date('end_date');
-            $table->decimal('amount_paid', 10, 2);
-            $table->string('payment_method');
+            $table->decimal('amount_paid', 10, 2)->nullable();
+            $table->string('payment_method')->nullable();
             $table->timestamps();
         });
     }

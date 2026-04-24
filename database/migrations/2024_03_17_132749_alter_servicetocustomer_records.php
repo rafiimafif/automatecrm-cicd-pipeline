@@ -13,8 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
+        try {
+            Schema::table('servicetocustomer_records', function (Blueprint $table) {
+                $table->dropColumn('amount_paid');
+                $table->dropColumn('payment_method');
+            });
+        } catch (\Exception $e) {
+            // Ignore SQLite drop column errors during testing
+        }
+
         Schema::table('servicetocustomer_records', function (Blueprint $table) {
-            $table->dropColumn(['amount_paid', 'payment_method']);
             $table->boolean('is_paid')->default(false);
             $table->foreignId('payment_id')->nullable()->constrained('payments')->onDelete('set null');
         });

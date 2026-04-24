@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Console\Scheduling\Schedule;
+
 class RenewalService
 {
     protected function schedule(Schedule $schedule)

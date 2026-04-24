@@ -54,6 +54,7 @@ Route::get('/servicetocustomer/{servicetocustomer}/edit', [ServicetoCustomerCont
 Route::put('/servicetocustomer/{servicetocustomer}', [ServicetoCustomerController::class, 'update'])->name('servicetocustomer.update');
 Route::delete('/servicetocustomer/{servicetocustomer}', 'App\Http\Controllers\ServicetoCustomerController@destroy')->name('servicetocustomer.destroy');
 Route::post('/servicetocustomer/update_reminder_status', 'App\Http\Controllers\ServicetoCustomerController@updateReminderStatus')->name('servicetocustomer.update_reminder_status');
+Route::delete('/customer/service/delete', [ServicetoCustomerController::class, 'delete_service_from_user'])->name('customer.service.delete')->middleware('auth');
 
 Route::post('/service/{id}/renew', [ServicetoCustomerController::class, 'renewService'])->name('service.renew');
 Route::get('/servicetocustomer/{servicetocustomer}/details', [ServicetoCustomerController::class, 'showServiceDetails'])->name('servicetocustomer.details');

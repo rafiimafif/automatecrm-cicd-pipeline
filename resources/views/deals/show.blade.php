@@ -117,7 +117,7 @@
                                         </div>
                                     </form>
 
-                                    @forelse ($deal->notes as $note)
+                                    @forelse ($notes as $note)
                                         <div class="d-flex mb-3 pb-3 border-bottom">
                                             <div class="mr-3">
                                                 @switch($note->type)
