@@ -19,7 +19,6 @@ class TransactionFactory extends Factory
             'sales_date_out' => now(),
             'mdr' => 0.00,
             'nett_after_mdr' => 0.00,
-            'status' => 'completed',
         ];
     }
 }
