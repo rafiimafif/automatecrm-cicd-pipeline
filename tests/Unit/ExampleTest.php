@@ -97,6 +97,6 @@ class ExampleTest extends TestCase
     {
         $finance = \App\Http\Controllers\HomeController::finance();
         $this->assertIsArray($finance);
-        $this->assertCount(3, $finance);
+        $this->assertCount(4, $finance);
     }
 }
