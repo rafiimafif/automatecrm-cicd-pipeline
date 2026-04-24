@@ -57,6 +57,10 @@ class ExportFunctionalityTest extends TestCase
         // Create another customer
         $newCustomer = Customer::factory()->create();
 
+        // Second export
+        $this->actingAs($this->createUser())
+            ->post('/export-customers');
+
         // Verify file exists
         $this->assertTrue(file_exists($filePath));
     }
