@@ -56,7 +56,13 @@
 
 ## About The Project
 
-automateCRM is a streamlined Customer Relationship Management platform built with **Laravel 9** and **Vue.js 3**. This repository showcases a complete **CI/CD pipeline** and **DevOps workflow** wrapping the application — from local development through automated testing, security scanning, code quality gates, Docker image building, and infrastructure provisioning on AWS.
+automateCRM is a production-ready Customer Relationship Management platform built with **Laravel 9** and **Vue.js 3**. It features a robust sales pipeline, task management system, and deep customer interaction tracking, all wrapped in a high-performance **DevOps pipeline** (GitHub Actions & Jenkins) with automated testing, security scanning, and containerized deployment.
+
+### 🚀 Tier 1 CRM Features (Just Added)
+- **Kanban Sales Pipeline**: Manage deals visually with customizable stages and drag-and-drop transitions.
+- **Task & Follow-up System**: Never miss a lead with integrated task management and priority tracking.
+- **Interaction Timeline**: A complete history of every call, email, and meeting per customer.
+- **Advanced Segmentation**: Organize your database with custom tags and color-coded labels.
 
 ### 🌟 Portfolio Highlight: Hybrid Data Pipeline
 The system features a custom-engineered **Hybrid POS Data Pipeline** that synchronizes local Excel datasets with Google Sheets in the cloud. It utilizes a high-performance **Google Apps Script Web App** architecture, splitting large datasets into chunks and performing bulk-writes using direct memory matrix operations (`setValues`) for near-instant synchronization and 100% data consistency.
@@ -65,16 +71,18 @@ The system features a custom-engineered **Hybrid POS Data Pipeline** that synchr
 
 | Feature | Description |
 |---|---|
-| **Customer Management** | Add, edit, delete, import/export customers via Excel |
-| **Service Tracking** | Assign services to customers, track expiration dates |
+| **Sales Pipeline** | **[NEW]** Kanban board with drag-and-drop deal transitions and value tracking |
+| **Task Management** | **[NEW]** Priority-based tasks with due dates, linked to customers or deals |
+| **Interaction History** | **[NEW]** Polymorphic timeline for logging calls, emails, meetings, and notes |
+| **Customer Segmentation** | **[NEW]** Advanced tagging system with color-coded badges and tag filtering |
+| **Customer Management** | Add, edit, delete (soft deletes), and search/paginate customers |
+| **Service Tracking** | Assign services to customers, track expiration dates, and upcoming renewals |
 | **Payment Management** | Record and view payment history per customer |
 | **Transaction Dataset** | Import POS transactions from Excel, add new ones via CRM |
-| **Hybrid Cloud Sync** | **[NEW]** Real-time & Batch Synchronization with Google Sheets (Mirror-Mode) |
-| **Live Excel Integration** | Real-time API endpoint (`/api/transactions`) for Excel Power Query — spreadsheet auto-refreshes with live data, no manual export needed |
+| **Hybrid Cloud Sync** | Real-time & Batch Synchronization with Google Sheets (Mirror-Mode) |
+| **Live Excel Integration** | API endpoint for Excel Power Query — spreadsheet auto-refreshes with live data |
+| **Dashboard Analytics** | Visual overview of business KPIs, including new CRM metrics |
 | **Activity Logging** | Full audit trail of all system actions |
-| **Email Notifications** | Automated service expiration reminder emails |
-| **Dashboard Analytics** | Visual overview of business metrics |
-| **REST API** | JSON API endpoints for transactions, customers, services, and health checks |
 | **Queue Workers** | Background job processing via Redis queues |
 | **Task Scheduler** | Cron-like scheduler running inside Docker |
 
@@ -104,6 +112,7 @@ The system features a custom-engineered **Hybrid POS Data Pipeline** that synchr
 |---|---|
 | **Docker** | Multi-stage image build (Node → Composer → PHP-FPM+Nginx+Supervisor) |
 | **Docker Compose** | Full local stack orchestration — 7 services |
+| **GitHub Actions** | **[NEW]** Complete secondary CI/CD pipeline (Lint → Test → Scan → Build → Deploy) |
 | **Jenkins** | Self-hosted CI/CD server with declarative pipeline |
 | **SonarCloud** | Continuous code quality & security analysis with Quality Gate |
 | **Trivy** | Docker image vulnerability scanning (HIGH/CRITICAL CVEs) |
