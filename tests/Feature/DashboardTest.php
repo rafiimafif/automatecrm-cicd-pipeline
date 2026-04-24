@@ -23,6 +23,7 @@ class DashboardTest extends TestCase
 
         // Create some data
         Transaction::create([
+            'sales_number' => 'TEST-001',
             'payment_amount' => 1000,
             'mdr' => 10,
             'nett_after_mdr' => 990,
@@ -32,16 +33,19 @@ class DashboardTest extends TestCase
             'city' => 'Jakarta',
         ]);
 
-        Customer::factory()->create(['created_at' => now()]);
+        $customer = Customer::factory()->create(['created_at' => now()]);
 
         $stage = DealStage::create(['name' => 'Initial', 'order' => 1]);
         Deal::factory()->create([
+            'customer_id' => $customer->id,
             'status' => 'open',
             'value' => 5000,
             'deal_stage_id' => $stage->id,
         ]);
 
         Task::factory()->create([
+            'taskable_id' => $customer->id,
+            'taskable_type' => Customer::class,
             'status' => 'pending',
             'due_date' => now()->subDay(),
         ]);
@@ -58,6 +62,7 @@ class DashboardTest extends TestCase
     public function test_finance_static_method()
     {
         Transaction::create([
+            'sales_number' => 'TEST-002',
             'payment_amount' => 2000,
             'mdr' => 20,
             'nett_after_mdr' => 1980,

@@ -13,6 +13,7 @@ class AuthTest extends TestCase
 
     public function test_confirm_password_view()
     {
+        $this->withoutVite();
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get('/password/confirm');
@@ -22,6 +23,7 @@ class AuthTest extends TestCase
 
     public function test_confirm_password_logic()
     {
+        $this->withoutVite();
         $user = User::factory()->create([
             'password' => Hash::make('password123'),
         ]);
@@ -36,6 +38,7 @@ class AuthTest extends TestCase
 
     public function test_confirm_password_fails_with_wrong_password()
     {
+        $this->withoutVite();
         $user = User::factory()->create([
             'password' => Hash::make('password123'),
         ]);
