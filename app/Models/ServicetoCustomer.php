@@ -59,4 +59,9 @@ class ServicetoCustomer extends Model
     {
         return $this->belongsTo(Payment::class, 'payment_id');
     }
+
+    public function getPaidStatusAttribute(): bool
+    {
+        return $this->payment_id !== null;
+    }
 }

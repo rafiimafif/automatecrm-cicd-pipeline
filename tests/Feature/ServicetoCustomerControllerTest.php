@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Customer;
+use App\Models\Payment;
 use App\Models\Service;
 use App\Models\ServicetoCustomer;
 use App\Models\User;
@@ -179,13 +180,20 @@ class ServicetoCustomerControllerTest extends TestCase
             'description' => 'Hosting',
         ]);
 
+        $payment = Payment::create([
+            'customer_id' => $customer->id,
+            'price' => 100,
+            'payment_date' => now(),
+            'payment_type' => 'Cash',
+        ]);
+
         $stc = ServicetoCustomer::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'price' => 100,
             'expiration' => now()->format('Y-m-d'),
             'reminder' => 0,
-            'payment_id' => 1, // simulating paid_status assuming it checks this
+            'payment_id' => $payment->id, // simulating paid_status
         ]);
 
         $response = $this->actingAs($user)->delete('/customer/service/delete', [
