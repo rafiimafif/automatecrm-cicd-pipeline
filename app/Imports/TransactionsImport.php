@@ -15,7 +15,7 @@ class TransactionsImport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            'POS TRX' => new PosTransactionsSheet(),
+            'POS TRX' => new PosTransactionsSheet,
         ];
     }
 }

@@ -24,7 +24,7 @@ Route::get('/health', function () {
     try {
         DB::connection()->getPdo();
         $status['database'] = 'connected';
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         $status['database'] = 'disconnected';
 
         return response()->json($status, 503);
@@ -77,11 +77,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('customers', function () {
-    return Customers::all();
+    return customers::all();
 });
 
 Route::get('customers/{id}', function ($id) {
-    return Customers::find($id);
+    return customers::find($id);
 });
 
 Route::get('customers-service/{id}', function ($id) {
@@ -96,16 +96,16 @@ Route::get('customers-service/{id}', function ($id) {
 });
 
 Route::get('services', function () {
-    return Services::all();
+    return services::all();
 });
 
 Route::get('services/{id}', function ($id) {
-    return Services::find($id);
+    return services::find($id);
 });
 
 Route::get('servicetocustomer', function () {
-    $services = Services::all();
-    //$customers = Customers::all();
+    $services = services::all();
+    // $customers = Customers::all();
 
     $customers = DB::table('servicetocustomer')
         ->join('services', 'services.id', '=', 'servicetocustomer.service_id')

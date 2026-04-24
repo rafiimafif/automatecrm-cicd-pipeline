@@ -7,7 +7,7 @@ class RenewalService
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            (new RenewalService())->checkForServiceRenewals();
+            (new RenewalService)->checkForServiceRenewals();
         })->daily();
     }
 

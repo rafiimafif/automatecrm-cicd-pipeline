@@ -6,6 +6,7 @@ use App\Exports\TransactionsExport;
 use App\Imports\TransactionsImport;
 use App\Models\Transaction;
 use App\Services\GoogleSyncService;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -107,7 +108,7 @@ class TransactionController extends Controller
 
             return redirect()->route('transactions.index')
                 ->with('success', 'Dataset.xlsx imported successfully! '.Transaction::count().' records loaded.');
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             // Friendly message for duplicate key or SQL errors
             return redirect()->route('transactions.index')
                 ->with('error', 'Import failed: A duplicate Sales Number was detected. Please clear the data first or check your dataset for duplicates.');

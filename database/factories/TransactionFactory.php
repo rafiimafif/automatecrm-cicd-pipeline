@@ -12,7 +12,7 @@ class TransactionFactory extends Factory
     public function definition()
     {
         return [
-            'sales_number' => 'SALE-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'sales_number' => 'SALE-'.$this->faker->unique()->numberBetween(1000, 9999),
             'brand' => $this->faker->company,
             'payment_amount' => $this->faker->randomFloat(2, 10, 1000),
             'sales_date_in' => now(),

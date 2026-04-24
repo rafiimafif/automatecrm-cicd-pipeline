@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\ExpirationReminder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Mail;
@@ -45,7 +46,7 @@ class ServiceExpirationReminder extends Command
         foreach ($services as $s) {
 
             if ($s->expiration == date('Y-m-d', strtotime('+30 days'))) {
-                //var_dump($s);
+                // var_dump($s);
                 echo '30 days expiration';
                 $data = [
                     'email' => $s->email,
@@ -53,7 +54,7 @@ class ServiceExpirationReminder extends Command
                     'service_name' => $s->service_name,
                     'expiration' => $s->expiration,
                 ];
-                Mail::to($s->email)->send(new \App\Mail\ExpirationReminder($data));
+                Mail::to($s->email)->send(new ExpirationReminder($data));
 
             } elseif ($s->expiration == date('Y-m-d', strtotime('+15 days'))) {
                 echo '15 days expiration';
@@ -63,7 +64,7 @@ class ServiceExpirationReminder extends Command
                     'service_name' => $s->service_name,
                     'expiration' => $s->expiration,
                 ];
-                Mail::to($s->email)->send(new \App\Mail\ExpirationReminder($data));
+                Mail::to($s->email)->send(new ExpirationReminder($data));
             } elseif ($s->expiration == date('Y-m-d', strtotime('+5 days'))) {
                 echo '5 days expiration';
                 $data = [
@@ -72,7 +73,7 @@ class ServiceExpirationReminder extends Command
                     'service_name' => $s->service_name,
                     'expiration' => $s->expiration,
                 ];
-                Mail::to($s->email)->send(new \App\Mail\ExpirationReminder($data));
+                Mail::to($s->email)->send(new ExpirationReminder($data));
             } elseif ($s->expiration == date('Y-m-d')) {
                 echo 'today expiration';
                 $data = [
@@ -81,7 +82,7 @@ class ServiceExpirationReminder extends Command
                     'service_name' => $s->service_name,
                     'expiration' => $s->expiration,
                 ];
-                Mail::to($s->email)->send(new \App\Mail\ExpirationReminder($data));
+                Mail::to($s->email)->send(new ExpirationReminder($data));
             }
 
         }

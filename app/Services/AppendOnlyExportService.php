@@ -30,7 +30,7 @@ class AppendOnlyExportService
         try {
             // Create file if it doesn't exist
             if (! file_exists($filePath)) {
-                $spreadsheet = new Spreadsheet();
+                $spreadsheet = new Spreadsheet;
                 $sheet = $spreadsheet->getActiveSheet();
 
                 // Add headers if provided

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Customer;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -97,6 +98,6 @@ class ExportFunctionalityTest extends TestCase
      */
     private function createUser()
     {
-        return \App\Models\User::factory()->create();
+        return User::factory()->create();
     }
 }
